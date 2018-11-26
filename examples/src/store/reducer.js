@@ -1,17 +1,14 @@
 import { createActions, handleActions, combineActions } from "redux-actions";
 
 const defaultState = {
-  messages: [
-    { text: "hello", side: "received" },
-    { text: "how are you?", side: "received" }
-  ]
+  messages: []
 };
 
 export const actions = createActions({
   STORE_SENT_MESSAGE: text => ({ text, side: "sent" }),
   STORE_RECEIVED_MESSAGE: text => ({ text, side: "received" }),
   SEND: undefined,
-  RECEIVE: undefined
+  SEND_TO_WEBSOCKET: undefined
 });
 
 const reducer = handleActions(
