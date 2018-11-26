@@ -1,0 +1,27 @@
+{
+  "name": "jest-websocket-mock",
+  "version": "0.1.0",
+  "description": "Mock websockets and assert complex websocket interactions with Jest",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/romgain/jest-websocket-mock.git"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "jest",
+    "websocket",
+    "mock",
+    "unit-testing"
+  ],
+  "author": "Romain Bertrand",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^23.6.0"
+  },
+  "peerDependencies": {
+    "mock-socket": "~8.0"
+  }
+}
