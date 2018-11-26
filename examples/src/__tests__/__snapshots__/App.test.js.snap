@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The App component renders the app skeleton 1`] = `
+<div
+  className="App"
+>
+  <Messages />
+  <MessageInput />
+</div>
+`;

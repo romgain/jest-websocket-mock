@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The Messages component renders the list of sent and received messages 1`] = `
+<div
+  className="Messages"
+>
+  <div>
+    (
+    received
+    ) 
+    ping
+  </div>
+  <div>
+    (
+    sent
+    ) 
+    pong 
+  </div>
+  <div>
+    (
+    received
+    ) 
+    Oh hi Mark
+  </div>
+</div>
+`;
