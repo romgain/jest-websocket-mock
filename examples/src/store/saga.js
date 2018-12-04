@@ -20,10 +20,18 @@ function* sendWebsocketMessages(connection) {
   }
 }
 
+function* disconnect(connection) {
+  while (true) {
+    yield take(actions.disconnect);
+    yield call([connection, connection.close]);
+  }
+}
+
 function* websocketSagas() {
   const connection = new WebSocket(`ws://${window.location.hostname}:8080`);
   const channel = yield call(websocketInitChannel, connection);
   yield fork(sendWebsocketMessages, connection);
+  yield fork(disconnect, connection);
   while (true) {
     const action = yield take(channel);
     yield put(action);

@@ -1,14 +1,15 @@
 import { createActions, handleActions, combineActions } from "redux-actions";
 
 const defaultState = {
-  messages: []
+  messages: [],
 };
 
 export const actions = createActions({
   STORE_SENT_MESSAGE: text => ({ text, side: "sent" }),
   STORE_RECEIVED_MESSAGE: text => ({ text, side: "received" }),
   SEND: undefined,
-  SEND_TO_WEBSOCKET: undefined
+  SEND_TO_WEBSOCKET: undefined,
+  DISCONNECT: undefined,
 });
 
 const reducer = handleActions(
@@ -16,7 +17,7 @@ const reducer = handleActions(
     [combineActions(actions.storeReceivedMessage, actions.storeSentMessage)]: (
       state,
       { payload }
-    ) => ({ ...state, messages: [...state.messages, payload] })
+    ) => ({ ...state, messages: [...state.messages, payload] }),
   },
   defaultState
 );

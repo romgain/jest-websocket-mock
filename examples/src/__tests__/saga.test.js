@@ -37,4 +37,9 @@ describe("The saga", () => {
       { side: "sent", text: "oh hi Mark" },
     ]);
   });
+
+  it("cleanly disconnects from the websocket server", async () => {
+    store.dispatch(actions.disconnect());
+    await ws.closed;
+  });
 });

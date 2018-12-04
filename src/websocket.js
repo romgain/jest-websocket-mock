@@ -21,6 +21,8 @@ export default class WS {
 
     this.server = new Server(url);
 
+    this.server.on("close", closedResolver);
+
     this.server.on("connection", socket => {
       socket.send("Hello there");
       connectionResolver();
@@ -30,8 +32,6 @@ export default class WS {
         this.nextMessage = new Promise(done => (nextMessageResolver = done));
         this.messages.push(message);
       });
-
-      socket.on("close", closedResolver);
     });
   }
 
