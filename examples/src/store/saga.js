@@ -9,6 +9,7 @@ function websocketInitChannel(connection) {
     };
     return () => {
       // unsubscribe function
+      connection.close();
     };
   });
 }
@@ -21,18 +22,16 @@ function* sendMessage(connection) {
   }
 }
 
-function* disconnect(connection) {
-  while (true) {
-    yield take(actions.disconnect);
-    yield call([connection, connection.close]);
-  }
+function* disconnect(channel) {
+  yield take(actions.disconnect);
+  channel.close();
 }
 
 export default function* saga() {
   const connection = new WebSocket(`ws://${window.location.hostname}:8080`);
   const channel = yield call(websocketInitChannel, connection);
   yield fork(sendMessage, connection);
-  yield fork(disconnect, connection);
+  yield fork(disconnect, channel);
   while (true) {
     const action = yield take(channel);
     yield put(action);
