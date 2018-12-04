@@ -38,11 +38,6 @@ describe("The saga", () => {
     ]);
   });
 
-  it("cleanly disconnects from the websocket server", async () => {
-    store.dispatch(actions.disconnect());
-    await ws.closed;
-  });
-
   it("marks the connection as active when it successfully connects to the ws server", () => {
     expect(store.getState().connected).toBe(true);
   });
@@ -57,5 +52,22 @@ describe("The saga", () => {
     ws.error();
     await ws.closed;
     expect(store.getState().connected).toBe(false);
+  });
+
+  it("reconnects after losing the ws connection", async () => {
+    // We cannot use jest.useFakeTimers because mock-socket has to work around timing issues
+    jest.spyOn(window, "setTimeout");
+
+    ws.error();
+    await ws.closed;
+    expect(store.getState().connected).toBe(false);
+
+    // Trigger our delayed reconnection
+    window.setTimeout.mock.calls.forEach(([cb, , ...args]) => cb(...args));
+
+    await ws.connected; // reconnected!
+    expect(store.getState().connected).toBe(true);
+
+    window.setTimeout.mockRestore();
   });
 });

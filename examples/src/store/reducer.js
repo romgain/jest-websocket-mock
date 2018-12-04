@@ -9,7 +9,6 @@ export const actions = createActions({
   STORE_SENT_MESSAGE: text => ({ text, side: "sent" }),
   STORE_RECEIVED_MESSAGE: text => ({ text, side: "received" }),
   SEND: undefined,
-  DISCONNECT: undefined,
   CONNECTION_SUCCESS: () => ({ connected: true }),
   CONNECTION_LOST: () => ({ connected: false }),
 });

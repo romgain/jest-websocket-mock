@@ -1,6 +1,8 @@
-import { eventChannel, END } from "redux-saga";
-import { call, fork, put, take } from "redux-saga/effects";
+import { delay, eventChannel, END } from "redux-saga";
+import { cancel, call, fork, put, take } from "redux-saga/effects";
 import { actions } from "./reducer";
+
+const RECONNECT_TIMEOUT = 6000;
 
 function websocketInitChannel(connection) {
   return eventChannel(emitter => {
@@ -31,19 +33,22 @@ function* sendMessage(connection) {
   }
 }
 
-function* disconnect(channel) {
-  yield take(actions.disconnect);
-  channel.close();
-}
-
 export default function* saga() {
   const connection = new WebSocket(`ws://${window.location.hostname}:8080`);
   const channel = yield call(websocketInitChannel, connection);
   yield put(actions.connectionSuccess());
-  yield fork(sendMessage, connection);
-  yield fork(disconnect, channel);
-  while (true) {
-    const action = yield take(channel);
-    yield put(action);
+  const sendMessageTask = yield fork(sendMessage, connection);
+  try {
+    while (true) {
+      const action = yield take(channel);
+      yield put(action);
+    }
+  } finally {
+    // cancel background tasks...
+    channel.close();
+    yield cancel(sendMessageTask);
+    // ...and start again
+    yield call(delay, RECONNECT_TIMEOUT);
+    return yield call(saga);
   }
 }
