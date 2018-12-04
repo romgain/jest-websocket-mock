@@ -2,12 +2,15 @@
   "name": "jest-websocket-mock",
   "version": "0.1.0",
   "description": "Mock websockets and assert complex websocket interactions with Jest",
-  "main": "src/index.js",
+  "main": "lib/jest-websocket-mock.cjs.js",
+  "module": "lib/jest-websocket-mock.es.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/romgain/jest-websocket-mock.git"
   },
   "scripts": {
+    "clean": "rimraf lib",
+    "build": "rollup -c",
     "test": "jest"
   },
   "keywords": [
@@ -19,8 +22,13 @@
   "author": "Romain Bertrand",
   "license": "MIT",
   "devDependencies": {
+    "@babel/core": "^7.2.0",
+    "@babel/plugin-proposal-class-properties": "^7.2.1",
     "jest": "^23.6.0",
-    "mock-socket": "~8.0"
+    "mock-socket": "~8.0",
+    "rimraf": "^2.6.2",
+    "rollup": "^0.67.4",
+    "rollup-plugin-babel": "^4.0.3"
   },
   "peerDependencies": {
     "mock-socket": "~8.0"
