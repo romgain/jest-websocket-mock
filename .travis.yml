@@ -1,0 +1,16 @@
+language: node_js
+
+node_js:
+  - "node"
+  - "lts/*"
+
+before_install:
+  - npm install
+  - cd examples
+  - npm ci
+  - cd ..
+
+script:
+  - cd examples
+  - npm test -- --coverage
+  - cd ..

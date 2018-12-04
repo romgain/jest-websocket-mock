@@ -19,7 +19,8 @@
   "author": "Romain Bertrand",
   "license": "MIT",
   "devDependencies": {
-    "jest": "^23.6.0"
+    "jest": "^23.6.0",
+    "mock-socket": "~8.0"
   },
   "peerDependencies": {
     "mock-socket": "~8.0"
