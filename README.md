@@ -1,5 +1,6 @@
 # Jest websocket mock
 [![Build Status](https://travis-ci.org/romgain/jest-websocket-mock.svg?branch=master)](https://travis-ci.org/romgain/jest-websocket-mock)
+[![npm version](https://badge.fury.io/js/jest-websocket-mock.svg)](https://badge.fury.io/js/jest-websocket-mock)
 
 A set of utilities and Jest matchers to help testing complex websocket interactions.
 
