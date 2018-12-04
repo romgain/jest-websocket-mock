@@ -38,4 +38,15 @@ export default class WS {
   send(message) {
     this.server.emit("message", message);
   }
+
+  close() {
+    this.server.emit("close");
+    this.server.stop();
+    this.server.close();
+  }
+
+  error() {
+    this.server.emit("error");
+    this.server.close();
+  }
 }

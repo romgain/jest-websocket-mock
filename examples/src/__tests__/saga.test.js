@@ -42,4 +42,20 @@ describe("The saga", () => {
     store.dispatch(actions.disconnect());
     await ws.closed;
   });
+
+  it("marks the connection as active when it successfully connects to the ws server", () => {
+    expect(store.getState().connected).toBe(true);
+  });
+
+  it("marks the connection as inactive after a disconnect", async () => {
+    ws.close();
+    await ws.closed;
+    expect(store.getState().connected).toBe(false);
+  });
+
+  it("marks the connection as inactive after a connection error", async () => {
+    ws.error();
+    await ws.closed;
+    expect(store.getState().connected).toBe(false);
+  });
 });
