@@ -11,6 +11,7 @@
   "scripts": {
     "clean": "rimraf lib",
     "build": "rollup -c",
+    "prepublishOnly": "npm run clean && npm run build",
     "test": "jest"
   },
   "keywords": [
