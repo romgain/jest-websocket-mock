@@ -4,6 +4,7 @@ exports[`The App component renders the app skeleton 1`] = `
 <div
   className="App"
 >
+  <ConnectionIndicator />
   <Messages />
   <MessageInput />
 </div>

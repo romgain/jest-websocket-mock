@@ -2,6 +2,7 @@ import React from "react";
 import renderer from "react-test-renderer";
 import App from "../App";
 
+jest.mock("../ConnectionIndicator", () => "ConnectionIndicator");
 jest.mock("../Messages", () => "Messages");
 jest.mock("../MessageInput", () => "MessageInput");
 

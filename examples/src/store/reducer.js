@@ -2,6 +2,7 @@ import { createActions, handleActions, combineActions } from "redux-actions";
 
 const defaultState = {
   messages: [],
+  connected: false,
 };
 
 export const actions = createActions({
@@ -9,6 +10,8 @@ export const actions = createActions({
   STORE_RECEIVED_MESSAGE: text => ({ text, side: "received" }),
   SEND: undefined,
   DISCONNECT: undefined,
+  CONNECTION_SUCCESS: () => ({ connected: true }),
+  CONNECTION_LOST: () => ({ connected: false }),
 });
 
 const reducer = handleActions(
@@ -17,6 +20,10 @@ const reducer = handleActions(
       state,
       { payload }
     ) => ({ ...state, messages: [...state.messages, payload] }),
+    [combineActions(actions.connectionSuccess, actions.connectionLost)]: (
+      state,
+      { payload: { connected } }
+    ) => ({ ...state, connected }),
   },
   defaultState
 );

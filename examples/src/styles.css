@@ -19,6 +19,21 @@ body {
   padding: 2rem;
 }
 
+.ConnectionIndicator {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 2rem;
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+}
+.ConnectionIndicator--connected {
+  background-color: green;
+}
+.ConnectionIndicator--disconnected {
+  background-color: indianred;
+}
+
 .Messages {
   margin-bottom: 8rem;
   display: flex;

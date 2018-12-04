@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The ConnectionIndicator component renders a green dot when successfully connected 1`] = `
+<div
+  className="ConnectionIndicator ConnectionIndicator--connected"
+/>
+`;
+
+exports[`The ConnectionIndicator component renders a red dot when not connected 1`] = `
+<div
+  className="ConnectionIndicator ConnectionIndicator--disconnected"
+/>
+`;
