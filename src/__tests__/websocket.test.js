@@ -54,6 +54,26 @@ describe("The WS helper", () => {
     });
   });
 
+  it("seamlessly handles JSON protocols", async () => {
+    const server = new WS("ws://localhost:1234", { jsonProtocol: true });
+    const client = new WebSocket("ws://localhost:1234");
+
+    await server.connected;
+    client.send(`{ "type": "GREETING", "payload": "hello" }`);
+    await server.nextMessage;
+    expect(server.messages).toEqual([{ type: "GREETING", payload: "hello" }]);
+
+    let message = null;
+    client.onmessage = e => {
+      message = e.data;
+    };
+
+    server.send({ type: "CHITCHAT", payload: "Nice weather today" });
+    expect(message).toEqual(
+      `{"type":"CHITCHAT","payload":"Nice weather today"}`
+    );
+  });
+
   it("closes the connection", async () => {
     const server = new WS("ws://localhost:1234");
     const client = new WebSocket("ws://localhost:1234");

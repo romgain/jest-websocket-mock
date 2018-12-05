@@ -1,5 +1,7 @@
 import { Server } from "mock-socket";
 
+const identity = x => x;
+
 export default class WS {
   static instances = [];
   messages = [];
@@ -13,8 +15,11 @@ export default class WS {
     WS.instances = [];
   }
 
-  constructor(url) {
+  constructor(url, { jsonProtocol = false } = {}) {
     WS.instances.push(this);
+
+    this.serializer = jsonProtocol ? JSON.stringify : identity;
+    this.deserializer = jsonProtocol ? JSON.parse : identity;
 
     let connectionResolver, nextMessageResolver, closedResolver;
     this.connected = new Promise(done => (connectionResolver = done));
@@ -29,15 +34,16 @@ export default class WS {
       connectionResolver();
 
       socket.on("message", message => {
-        nextMessageResolver();
+        const parsedMessage = this.deserializer(message);
+        nextMessageResolver(parsedMessage);
         this.nextMessage = new Promise(done => (nextMessageResolver = done));
-        this.messages.push(message);
+        this.messages.push(parsedMessage);
       });
     });
   }
 
   send(message) {
-    this.server.emit("message", message);
+    this.server.emit("message", this.serializer(message));
   }
 
   close() {
