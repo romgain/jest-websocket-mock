@@ -11,6 +11,7 @@ before_install:
   - cd ..
 
 script:
+  - npm test -- --coverage
   - cd examples
   - npm test -- --coverage
   - cd ..
