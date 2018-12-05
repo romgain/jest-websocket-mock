@@ -5,13 +5,14 @@ describe("The WS helper", () => {
     WS.clean();
   });
 
-  it("keeps track of received messages", async () => {
+  it("keeps track of received messages, and yields them as they come in", async () => {
     const server = new WS("ws://localhost:1234");
     const client = new WebSocket("ws://localhost:1234");
 
     await server.connected;
     client.send("hello");
-    await server.nextMessage;
+    const message = await server.nextMessage;
+    expect(message).toBe("hello");
     expect(server.messages).toEqual(["hello"]);
   });
 
@@ -60,8 +61,9 @@ describe("The WS helper", () => {
 
     await server.connected;
     client.send(`{ "type": "GREETING", "payload": "hello" }`);
-    await server.nextMessage;
+    const received = await server.nextMessage;
     expect(server.messages).toEqual([{ type: "GREETING", payload: "hello" }]);
+    expect(received).toEqual({ type: "GREETING", payload: "hello" });
 
     let message = null;
     client.onmessage = e => {
