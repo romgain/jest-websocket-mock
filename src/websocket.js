@@ -24,7 +24,6 @@ export default class WS {
     this.server.on("close", closedResolver);
 
     this.server.on("connection", socket => {
-      socket.send("Hello there");
       connectionResolver();
 
       socket.on("message", message => {

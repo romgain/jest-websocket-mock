@@ -7,6 +7,7 @@ beforeEach(async () => {
   ws = new WS("ws://localhost:8080");
   store = makeStore();
   await ws.connected;
+  ws.send("Hello there");
 });
 afterEach(() => {
   WS.clean();
