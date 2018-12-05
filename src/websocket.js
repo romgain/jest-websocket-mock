@@ -8,7 +8,9 @@ export default class WS {
     WS.instances.forEach(instance => {
       instance.server.stop();
       instance.server.close();
+      instance.messages = [];
     });
+    WS.instances = [];
   }
 
   constructor(url) {
