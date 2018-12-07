@@ -34,22 +34,32 @@ describe("The WS helper", () => {
   });
 
   it("handles messages received in a quick succession", async () => {
+    expect.hasAssertions();
     const server = new WS("ws://localhost:1234");
     const client = new WebSocket("ws://localhost:1234");
     await server.connected;
 
     "abcdef".split("").forEach(client.send.bind(client));
-    await server.nextMessage;
-    await server.nextMessage;
-    await server.nextMessage;
-    await server.nextMessage;
-    await server.nextMessage;
-    await server.nextMessage;
 
-    "xyz".split("").forEach(client.send.bind(client));
-    await server.nextMessage;
-    await server.nextMessage;
-    await server.nextMessage;
+    let waitedEnough;
+    const waitABit = new Promise(done => (waitedEnough = done));
+
+    setTimeout(async () => {
+      await server.nextMessage;
+      await server.nextMessage;
+      await server.nextMessage;
+      await server.nextMessage;
+      await server.nextMessage;
+      await server.nextMessage;
+
+      "xyz".split("").forEach(client.send.bind(client));
+      await server.nextMessage;
+      await server.nextMessage;
+      await server.nextMessage;
+      waitedEnough();
+    }, 500);
+
+    await waitABit;
     expect(server.messages).toEqual("abcdefxyz".split(""));
   });
 
