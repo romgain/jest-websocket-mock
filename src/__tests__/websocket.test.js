@@ -33,6 +33,26 @@ describe("The WS helper", () => {
     expect(server.messages).toEqual([]);
   });
 
+  it("handles messages received in a quick succession", async () => {
+    const server = new WS("ws://localhost:1234");
+    const client = new WebSocket("ws://localhost:1234");
+    await server.connected;
+
+    "abcdef".split("").forEach(client.send.bind(client));
+    await server.nextMessage;
+    await server.nextMessage;
+    await server.nextMessage;
+    await server.nextMessage;
+    await server.nextMessage;
+    await server.nextMessage;
+
+    "xyz".split("").forEach(client.send.bind(client));
+    await server.nextMessage;
+    await server.nextMessage;
+    await server.nextMessage;
+    expect(server.messages).toEqual("abcdefxyz".split(""));
+  });
+
   it("sends messages to connected clients", async () => {
     const server = new WS("ws://localhost:1234");
     const client1 = new WebSocket("ws://localhost:1234");
