@@ -1,0 +1,70 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`.not.toReceiveMessage fails when called with an expected argument that is not a valid WS 1`] = `
+"[2mexpect([22m[31mWS[39m[2m).not.toReceiveMessage([22m[32mexpected[39m[2m)[22m
+
+Expected the websocket object to be a valid WS mock.
+Received: string
+  [31m\\"boom\\"[39m"
+`;
+
+exports[`.not.toReceiveMessage fails when the WS server doesn't receive any messages 1`] = `
+"[2mexpect([22m[31mWS[39m[2m).not.toReceiveMessage([22m[32mexpected[39m[2m)[22m
+
+Expected the websocket server to receive a message,
+but it didn't receive anything in 1000ms."
+`;
+
+exports[`.not.toReceiveMessage fails when the WS server receives the un-expected message 1`] = `
+"[2mexpect([22m[31mWS[39m[2m).not.toReceiveMessage([22m[32mexpected[39m[2m)[22m
+
+Expected the next received message to not equal:
+  [32m\\"hello there\\"[39m
+Received:
+  [31m\\"hello there\\"[39m"
+`;
+
+exports[`.toReceiveMessage fails when called with an expected argument that is not a valid WS 1`] = `
+"[2mexpect([22m[31mWS[39m[2m).toReceiveMessage([22m[32mexpected[39m[2m)[22m
+
+Expected the websocket object to be a valid WS mock.
+Received: string
+  [31m\\"boom\\"[39m"
+`;
+
+exports[`.toReceiveMessage fails when expecting a JSON message but the server is not configured for JSON protocols 1`] = `
+"[2mexpect([22m[31mWS[39m[2m).toReceiveMessage([22m[32mexpected[39m[2m)[22m
+
+Expected the next received message to equal:
+  [32m{\\"answer\\": 42}[39m
+Received:
+  [31m\\"{\\\\\\"answer\\\\\\":42}\\"[39m
+
+Difference:
+
+  Comparing two different types of values. Expected [32mobject[39m but received [31mstring[39m."
+`;
+
+exports[`.toReceiveMessage fails when the WS server does not receive the expected message 1`] = `
+"[2mexpect([22m[31mWS[39m[2m).toReceiveMessage([22m[32mexpected[39m[2m)[22m
+
+Expected the websocket server to receive a message,
+but it didn't receive anything in 1000ms."
+`;
+
+exports[`.toReceiveMessage fails when the WS server receives a different message 1`] = `
+"[2mexpect([22m[31mWS[39m[2m).toReceiveMessage([22m[32mexpected[39m[2m)[22m
+
+Expected the next received message to equal:
+  [32m\\"HI!\\"[39m
+Received:
+  [31m\\"hello there\\"[39m
+
+Difference:
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- HI![39m
+[31m+ hello there[39m"
+`;

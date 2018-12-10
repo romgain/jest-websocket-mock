@@ -44,7 +44,7 @@ describe("The saga", () => {
 
   it("sends messages", async () => {
     store.dispatch(actions.send("oh hi Mark"));
-    await ws.nextMessage;
+    await expect(ws).toReceiveMessage("oh hi Mark");
 
     expect(ws.messages).toEqual(["oh hi Mark"]);
     expect(store.getState().messages).toEqual([
@@ -58,14 +58,10 @@ describe("The saga", () => {
     store.dispatch(actions.send("hey?"));
     store.dispatch(actions.send("hey??"));
     store.dispatch(actions.send("hey???"));
-    const msg1 = await ws.nextMessage;
-    expect(msg1).toBe("hey");
-    const msg2 = await ws.nextMessage;
-    expect(msg2).toBe("hey?");
-    const msg3 = await ws.nextMessage;
-    expect(msg3).toBe("hey??");
-    const msg4 = await ws.nextMessage;
-    expect(msg4).toBe("hey???");
+    await expect(ws).toReceiveMessage("hey");
+    await expect(ws).toReceiveMessage("hey?");
+    await expect(ws).toReceiveMessage("hey??");
+    await expect(ws).toReceiveMessage("hey???");
 
     expect(ws.messages).toEqual(["hey", "hey?", "hey??", "hey???"]);
     expect(store.getState().messages).toEqual([
