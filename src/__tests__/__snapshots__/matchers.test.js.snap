@@ -1,5 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`.not.toHaveReceivedMessages fails when called with an expected argument that is not a valid WS 1`] = `
+"[2mexpect([22m[31mWS[39m[2m).not.toHaveReceivedMessages([22m[32mexpected[39m[2m)[22m
+
+Expected the websocket object to be a valid WS mock.
+Received: string
+  [31m\\"boom\\"[39m"
+`;
+
+exports[`.not.toHaveReceivedMessages fails when the websocket server received at least one unexpected message 1`] = `
+"[2mexpect([22m[31mWS[39m[2m).not.toHaveReceivedMessages([22m[32mexpected[39m[2m)[22m
+
+Expected the WS server to not have received the following messages:
+  [32m[\\"'sup?\\", \\"U good?\\", \\"hello there\\"][39m
+But it received:
+  [31m[\\"hello there\\", \\"how are you?\\", \\"good?\\"][39m"
+`;
+
 exports[`.not.toReceiveMessage fails when called with an expected argument that is not a valid WS 1`] = `
 "[2mexpect([22m[31mWS[39m[2m).not.toReceiveMessage([22m[32mexpected[39m[2m)[22m
 
@@ -22,6 +39,25 @@ Expected the next received message to not equal:
   [32m\\"hello there\\"[39m
 Received:
   [31m\\"hello there\\"[39m"
+`;
+
+exports[`.toHaveReceivedMessages fails when called with an expected argument that is not a valid WS 1`] = `
+"[2mexpect([22m[31mWS[39m[2m).toHaveReceivedMessages([22m[32mexpected[39m[2m)[22m
+
+Expected the websocket object to be a valid WS mock.
+Received: string
+  [31m\\"boom\\"[39m"
+`;
+
+exports[`.toHaveReceivedMessages fails when the websocket server did not receive the expected messages 1`] = `
+"[2mexpect([22m[31mWS[39m[2m).toHaveReceivedMessages([22m[32mexpected[39m[2m)[22m
+
+Expected the WS server to have received the following messages:
+  [32m[\\"hello there\\", \\"'sup?\\"][39m
+Received:
+  [31m[\\"hello there\\", \\"how are you?\\", \\"good?\\"][39m
+
+"
 `;
 
 exports[`.toReceiveMessage fails when called with an expected argument that is not a valid WS 1`] = `

@@ -4,23 +4,27 @@ import WS from "./websocket";
 const WAIT_DELAY = 1000;
 const TIMEOUT = Symbol("timoeut");
 
+const makeInvalidWsMessage = function makeInvalidWsMessage(ws, matcher) {
+  return (
+    this.utils.matcherHint(
+      this.isNot ? `.not.${matcher}` : `.${matcher}`,
+      "WS",
+      "expected"
+    ) +
+    "\n\n" +
+    `Expected the websocket object to be a valid WS mock.\n` +
+    `Received: ${typeof ws}\n` +
+    `  ${this.utils.printReceived(ws)}`
+  );
+};
+
 expect.extend({
   async toReceiveMessage(ws, expected) {
     const isWS = ws instanceof WS;
-
     if (!isWS) {
       return {
         pass: this.isNot, // always fail
-        message: () =>
-          this.utils.matcherHint(
-            this.isNot ? ".not.toReceiveMessage" : ".toReceiveMessage",
-            "WS",
-            "expected"
-          ) +
-          "\n\n" +
-          `Expected the websocket object to be a valid WS mock.\n` +
-          `Received: ${typeof ws}\n` +
-          `  ${this.utils.printReceived(ws)}`,
+        message: makeInvalidWsMessage.bind(this, ws, "toReceiveMessage"),
       };
     }
 
@@ -73,6 +77,53 @@ expect.extend({
       expected,
       message,
       name: "toReceiveMessage",
+      pass,
+    };
+  },
+
+  toHaveReceivedMessages(ws, messages) {
+    const isWS = ws instanceof WS;
+    if (!isWS) {
+      return {
+        pass: this.isNot, // always fail
+        message: makeInvalidWsMessage.bind(this, ws, "toHaveReceivedMessages"),
+      };
+    }
+
+    const received = messages.map(msg => ws.messages.includes(msg));
+    const pass = this.isNot ? received.some(Boolean) : received.every(Boolean);
+    const message = pass
+      ? () =>
+          this.utils.matcherHint(
+            ".not.toHaveReceivedMessages",
+            "WS",
+            "expected"
+          ) +
+          "\n\n" +
+          `Expected the WS server to not have received the following messages:\n` +
+          `  ${this.utils.printExpected(messages)}\n` +
+          `But it received:\n` +
+          `  ${this.utils.printReceived(ws.messages)}`
+      : () => {
+          return (
+            this.utils.matcherHint(
+              ".toHaveReceivedMessages",
+              "WS",
+              "expected"
+            ) +
+            "\n\n" +
+            `Expected the WS server to have received the following messages:\n` +
+            `  ${this.utils.printExpected(messages)}\n` +
+            `Received:\n` +
+            `  ${this.utils.printReceived(ws.messages)}\n\n`
+          );
+        };
+
+    return {
+      actual: ws.messages,
+      expected: messages,
+      message,
+      name: "toHaveReceivedMessages",
       pass,
     };
   },

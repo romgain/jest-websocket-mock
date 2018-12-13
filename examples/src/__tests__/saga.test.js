@@ -46,7 +46,7 @@ describe("The saga", () => {
     store.dispatch(actions.send("oh hi Mark"));
     await expect(ws).toReceiveMessage("oh hi Mark");
 
-    expect(ws.messages).toEqual(["oh hi Mark"]);
+    expect(ws).toHaveReceivedMessages(["oh hi Mark"]);
     expect(store.getState().messages).toEqual([
       { side: "received", text: "Hello there" },
       { side: "sent", text: "oh hi Mark" },
@@ -63,7 +63,7 @@ describe("The saga", () => {
     await expect(ws).toReceiveMessage("hey??");
     await expect(ws).toReceiveMessage("hey???");
 
-    expect(ws.messages).toEqual(["hey", "hey?", "hey??", "hey???"]);
+    expect(ws).toHaveReceivedMessages(["hey", "hey?", "hey??", "hey???"]);
     expect(store.getState().messages).toEqual([
       { side: "received", text: "Hello there" },
       { side: "sent", text: "hey" },
