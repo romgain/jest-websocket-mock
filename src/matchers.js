@@ -90,7 +90,10 @@ expect.extend({
       };
     }
 
-    const received = messages.map(msg => ws.messages.includes(msg));
+    const received = messages.map(expected =>
+      // object comparison to handle JSON protocols
+      ws.messages.some(actual => this.equals(actual, expected))
+    );
     const pass = this.isNot ? received.some(Boolean) : received.every(Boolean);
     const message = pass
       ? () =>

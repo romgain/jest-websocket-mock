@@ -97,6 +97,22 @@ describe(".toHaveReceivedMessages", () => {
     expect(server).toHaveReceivedMessages(["hello there", "good?"]);
   });
 
+  it("passes when the websocket server received the expected JSON messages", async () => {
+    const jsonServer = new WS("ws://localhost:9876", { jsonProtocol: true });
+    const jsonClient = new WebSocket("ws://localhost:9876");
+    await jsonServer.connected;
+    jsonClient.send(`{"type":"GREETING","payload":"hello there"}`);
+    jsonClient.send(`{"type":"GREETING","payload":"how are you?"}`);
+    jsonClient.send(`{"type":"GREETING","payload":"good?"}`);
+    await jsonServer.nextMessage;
+    await jsonServer.nextMessage;
+    await jsonServer.nextMessage;
+    expect(jsonServer).toHaveReceivedMessages([
+      { type: "GREETING", payload: "good?" },
+      { type: "GREETING", payload: "hello there" },
+    ]);
+  });
+
   it("fails when the websocket server did not receive the expected messages", async () => {
     client.send("hello there");
     client.send("how are you?");
