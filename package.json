@@ -1,6 +1,6 @@
 {
   "name": "jest-websocket-mock",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Mock websockets and assert complex websocket interactions with Jest",
   "main": "lib/jest-websocket-mock.cjs.js",
   "module": "lib/jest-websocket-mock.es.js",
