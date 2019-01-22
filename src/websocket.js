@@ -10,8 +10,7 @@ export default class WS {
 
   static clean() {
     WS.instances.forEach(instance => {
-      instance.server.stop();
-      instance.server.close();
+      instance.close();
       instance.messages = [];
     });
     WS.instances = [];

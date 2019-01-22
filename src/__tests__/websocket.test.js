@@ -22,6 +22,14 @@ describe("The WS helper", () => {
     await server.connected;
     const client2 = new WebSocket("ws://localhost:1234");
     await server.connected;
+
+    const connections = { client1: true, client2: true };
+    const onclose = name => () => {
+      connections[name] = false;
+    };
+    client1.onclose = onclose('client1');
+    client2.onclose = onclose('client2');
+
     client1.send("hello 1");
     await server.nextMessage;
     client2.send("hello 2");
@@ -31,6 +39,7 @@ describe("The WS helper", () => {
     WS.clean();
     expect(WS.instances).toEqual([]);
     expect(server.messages).toEqual([]);
+    expect(connections).toEqual({ client1: false, client2: false });
   });
 
   it("handles messages received in a quick succession", async () => {
