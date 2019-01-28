@@ -7,6 +7,7 @@ export default class WS {
   static instances = [];
   messages = [];
   messagesToConsume = new Queue();
+  onMessageCallback = message => {};
 
   static clean() {
     WS.instances.forEach(instance => {
@@ -35,8 +36,10 @@ export default class WS {
 
       socket.on("message", message => {
         const parsedMessage = this.deserializer(message);
+
         this.messages.push(parsedMessage);
         this.messagesToConsume.put(parsedMessage);
+        this.onMessageCallback(parsedMessage);
       });
     });
   }
@@ -58,5 +61,9 @@ export default class WS {
   error() {
     this.server.emit("error");
     this.server.close();
+  }
+
+  onMessage(callback) {
+    this.onMessageCallback = callback;
   }
 }

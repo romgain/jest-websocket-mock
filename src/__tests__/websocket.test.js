@@ -27,8 +27,8 @@ describe("The WS helper", () => {
     const onclose = name => () => {
       connections[name] = false;
     };
-    client1.onclose = onclose('client1');
-    client2.onclose = onclose('client2');
+    client1.onclose = onclose("client1");
+    client2.onclose = onclose("client2");
 
     client1.send("hello 1");
     await server.nextMessage;
@@ -149,5 +149,24 @@ describe("The WS helper", () => {
     expect(disconnected).toBe(true);
     expect(error.origin).toBe("ws://localhost:1234/");
     expect(error.type).toBe("error");
+  });
+
+  it("on client message", async () => {
+    const server = new WS("ws://localhost:1234");
+    const client = new WebSocket("ws://localhost:1234");
+
+    server.onMessage(message => {
+      expect(message).toEqual({
+        foo: "bar",
+      });
+    });
+
+    await server.connected;
+
+    client.send({
+      foo: "bar",
+    });
+
+    await server.nextMessage;
   });
 });
