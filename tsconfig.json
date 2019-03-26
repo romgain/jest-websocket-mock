@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es2015",
     "module": "commonjs",
-    "lib": ["es2015"],
+    "lib": ["es2015", "dom"],
     // "allowJs": true,                       /* Allow javascript files to be compiled. */
     // "checkJs": true,                       /* Report errors in .js files. */
     // "declaration": true,                   /* Generates corresponding '.d.ts' file. */
