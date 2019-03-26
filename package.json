@@ -11,6 +11,9 @@
   "scripts": {
     "clean": "rimraf lib",
     "build": "rollup -c",
+    "prettier:check": "prettier --list-different 'src/**/*.{ts,js}'",
+    "prettier:apply": "prettier --write 'src/**/*.{ts,js}'",
+    "type:check": "tsc --noEmit",
     "prepublishOnly": "npm run clean && npm run build",
     "test": "jest"
   },
@@ -46,6 +49,7 @@
     "babel-jest": "^24.5.0",
     "jest": "^24.5.0",
     "mock-socket": "~8.0",
+    "prettier": "^1.16.4",
     "rimraf": "^2.6.2",
     "rollup": "^0.67.4",
     "rollup-plugin-babel": "^4.0.3",

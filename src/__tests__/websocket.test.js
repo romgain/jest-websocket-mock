@@ -27,8 +27,8 @@ describe("The WS helper", () => {
     const onclose = name => () => {
       connections[name] = false;
     };
-    client1.onclose = onclose('client1');
-    client2.onclose = onclose('client2');
+    client1.onclose = onclose("client1");
+    client2.onclose = onclose("client2");
 
     client1.send("hello 1");
     await server.nextMessage;

@@ -12,6 +12,8 @@ before_install:
 
 script:
   - npm test -- --coverage
+  - npm run type:check
+  - npm run prettier:check
   - cd examples
   - npm test -- --coverage
   - cd ..
