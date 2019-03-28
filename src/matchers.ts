@@ -1,10 +1,15 @@
 import diff from "jest-diff";
 import WS from "./websocket";
+import { DeserializedMessage } from "./websocket";
 
 const WAIT_DELAY = 1000;
 const TIMEOUT = Symbol("timoeut");
 
-const makeInvalidWsMessage = function makeInvalidWsMessage(ws, matcher) {
+const makeInvalidWsMessage = function makeInvalidWsMessage(
+  this: jest.MatcherUtils,
+  ws: WS,
+  matcher: string
+) {
   return (
     this.utils.matcherHint(
       this.isNot ? `.not.${matcher}` : `.${matcher}`,
@@ -19,7 +24,7 @@ const makeInvalidWsMessage = function makeInvalidWsMessage(ws, matcher) {
 };
 
 expect.extend({
-  async toReceiveMessage(ws, expected) {
+  async toReceiveMessage(ws: WS, expected: DeserializedMessage) {
     const isWS = ws instanceof WS;
     if (!isWS) {
       return {
@@ -81,7 +86,7 @@ expect.extend({
     };
   },
 
-  toHaveReceivedMessages(ws, messages) {
+  toHaveReceivedMessages(ws: WS, messages: Array<DeserializedMessage>) {
     const isWS = ws instanceof WS;
     if (!isWS) {
       return {
