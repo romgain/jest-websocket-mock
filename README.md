@@ -188,6 +188,27 @@ afterEach(() => {
 });
 ```
 
+## Using `jest-websocket-mock` to interact with a non-global WebSocket object
+`jest-websocket-mock` uses [Mock Socket](https://github.com/thoov/mock-socket)
+under the hood to mock out WebSocket clients.
+Out of the box, Mock Socket will only mock out the global `WebSocket` object.
+If you are using a third-party WebSocket client library (eg. a Node.js
+implementation, like [`ws`](https://github.com/websockets/ws)), you'll need
+to set up a [manual mock](https://jestjs.io/docs/en/manual-mocks#mocking-node-modules):
+
+* Create a `__mocks__` folder in your project root
+* Add a new file in the `__mocks__` folder named after the library you want to
+mock out. For instance, for the `ws` library: `__mocks__/ws.js`.
+* Export Mock Socket's implementation in-lieu of the normal export from the
+library you want to mock out. For instance, for the `ws` library:
+
+```js
+// __mocks__/ws.js
+
+export { WebSocket as default } from "mock-socket";
+```
+
+
 ## Examples
 For a real life example, see the
 [examples directory](https://github.com/romgain/jest-websocket-mock/tree/master/examples),
