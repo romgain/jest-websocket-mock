@@ -1,7 +1,7 @@
 import WS from "../websocket";
 import "../matchers";
 
-let server, client;
+let server: WS, client: WebSocket;
 beforeEach(async () => {
   server = new WS("ws://localhost:1234");
   client = new WebSocket("ws://localhost:1234");

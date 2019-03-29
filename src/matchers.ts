@@ -2,6 +2,15 @@ import diff from "jest-diff";
 import WS from "./websocket";
 import { DeserializedMessage } from "./websocket";
 
+declare global {
+  namespace jest {
+    interface Matchers<R> {
+      toReceiveMessage(message: DeserializedMessage): R;
+      toHaveReceivedMessages(messages: Array<DeserializedMessage>): R;
+    }
+  }
+}
+
 const WAIT_DELAY = 1000;
 const TIMEOUT = Symbol("timoeut");
 

@@ -24,7 +24,7 @@ describe("The WS helper", () => {
     await server.connected;
 
     const connections = { client1: true, client2: true };
-    const onclose = name => () => {
+    const onclose = (name: "client1" | "client2") => () => {
       connections[name] = false;
     };
     client1.onclose = onclose("client1");
@@ -50,7 +50,7 @@ describe("The WS helper", () => {
 
     "abcdef".split("").forEach(client.send.bind(client));
 
-    let waitedEnough;
+    let waitedEnough: () => void;
     const waitABit = new Promise(done => (waitedEnough = done));
 
     setTimeout(async () => {
@@ -79,7 +79,11 @@ describe("The WS helper", () => {
     const client2 = new WebSocket("ws://localhost:1234");
     await server.connected;
 
-    const messages = { client1: [], client2: [] };
+    interface Messages {
+      client1: Array<string>;
+      client2: Array<string>;
+    }
+    const messages: Messages = { client1: [], client2: [] };
     client1.onmessage = e => {
       messages.client1.push(e.data);
     };
@@ -136,7 +140,7 @@ describe("The WS helper", () => {
     await server.connected;
 
     let disconnected = false;
-    let error = null;
+    let error: any; // bad types in MockSockets
     client.onclose = () => {
       disconnected = true;
     };
