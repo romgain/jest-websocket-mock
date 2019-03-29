@@ -6,14 +6,16 @@ node_js:
 
 before_install:
   - npm install
-  - cd examples
-  - npm ci
-  - cd ..
 
 script:
   - npm test -- --coverage
   - npm run type:check
   - npm run prettier:check
+  - npm run build
+  - npm pack
+  # Run the tests in the examples folder:
   - cd examples
-  - npm test -- --coverage
+  - npm install
+  - npm install ../jest-websocket-mock-*
+  - SKIP_PREFLIGHT_CHECK=true npm test -- --coverage
   - cd ..

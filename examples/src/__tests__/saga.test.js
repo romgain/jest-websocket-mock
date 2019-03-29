@@ -1,4 +1,4 @@
-import WS from "../../../src";
+import WS from "jest-websocket-mock";
 import makeStore from "../store";
 import { actions } from "../store/reducer";
 
