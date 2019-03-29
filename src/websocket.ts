@@ -43,6 +43,9 @@ export default class WS {
     this.server.on("connection", socket => {
       connectionResolver();
 
+      // Ignore invalid MockSocket type definitions that will be fixed in
+      // https://github.com/thoov/mock-socket/pull/254
+      // @ts-ignore
       socket.on("message", (message: string) => {
         const parsedMessage = this.deserializer(message);
         this.messages.push(parsedMessage);
