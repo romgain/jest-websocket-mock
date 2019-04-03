@@ -4,6 +4,8 @@
 
 A set of utilities and Jest matchers to help testing complex websocket interactions.
 
+**Examples:** [See examples in a sample redux-saga app](https://github.com/romgain/jest-websocket-mock/blob/master/examples/src/__tests__/saga.test.js)
+
 ## Install
 [Mock Socket](https://github.com/thoov/mock-socket) is a peer dependency and
 needs to be installed alongside `jest-websocket-mock`:

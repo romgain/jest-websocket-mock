@@ -37,8 +37,10 @@
     }
   },
   "devDependencies": {
-    "jest-websocket-mock": "file:../jest-websocket-mock-1.1.1.tgz",
     "mock-socket": "^8.0.5",
     "react-test-renderer": "^16.6.3"
+  },
+  "peerDependencies": {
+    "jest-websocket-mock": "~1.0"
   }
 }

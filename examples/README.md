@@ -1,14 +1,18 @@
 # Examples
+
 This folder is here to showcase testing examples of a real application.
 
 To run the tests:
 
 ```bash
+npm install
+npm install jest-websocket-mock
+# Or, to run the tests against a local jest-websocket-mock build:
+cd ..; npm run build && npm pack; npm install ../jest-websocket-mock-*; cd ..
 npm test -- --coverage
 ```
 
 The websocket tests are under `src/__tests__/saga.test.js`.
-
 
 If you want to see the app running locally:
 
