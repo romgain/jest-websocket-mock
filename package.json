@@ -13,7 +13,7 @@
     "clean": "rimraf lib",
     "build": "npm run clean && npm run build:lib && npm run build:types",
     "build:lib": "rollup -c",
-    "build:types": "tsc --emitDeclarationOnly --outFile lib/index.d.ts",
+    "build:types": "tsc -p tsconfig.build.json",
     "prettier:check": "prettier --list-different 'src/**/*.{ts,js}'",
     "prettier:apply": "prettier --write 'src/**/*.{ts,js}'",
     "type:check": "tsc --noEmit",
