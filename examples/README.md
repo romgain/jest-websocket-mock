@@ -8,8 +8,8 @@ To run the tests:
 npm install
 npm install jest-websocket-mock
 # Or, to run the tests against a local jest-websocket-mock build:
-cd ..; npm run build && npm pack; npm install ../jest-websocket-mock-*; cd ..
-npm test -- --coverage
+cd ..; npm run build && npm pack; cd examples; npm install ../jest-websocket-mock-*;
+SKIP_PREFLIGHT_CHECK=true npm test -- --coverage
 ```
 
 The websocket tests are under `src/__tests__/saga.test.js`.
