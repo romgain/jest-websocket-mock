@@ -8,13 +8,16 @@
     "type": "git",
     "url": "git+https://github.com/romgain/jest-websocket-mock.git"
   },
+  "types": "lib/index.d.ts",
   "scripts": {
     "clean": "rimraf lib",
-    "build": "rollup -c",
+    "build": "npm run clean && npm run build:lib && npm run build:types",
+    "build:lib": "rollup -c",
+    "build:types": "tsc --emitDeclarationOnly --outFile lib/index.d.ts",
     "prettier:check": "prettier --list-different 'src/**/*.{ts,js}'",
     "prettier:apply": "prettier --write 'src/**/*.{ts,js}'",
     "type:check": "tsc --noEmit",
-    "prepublishOnly": "npm run clean && npm run build",
+    "prepublishOnly": "npm run build",
     "test": "jest"
   },
   "keywords": [
