@@ -62,8 +62,8 @@ export default class WS {
     this.server.emit("message", this.serializer(message));
   }
 
-  close() {
-    this.server.emit("close", null);
+  close(event: Partial<CloseEvent> = {}) {
+    this.server.emit("close", event);
     this.server.stop();
     this.server.close();
   }
