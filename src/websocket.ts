@@ -5,7 +5,7 @@ const identity = (x: string) => x;
 interface WSOptions {
   jsonProtocol?: boolean;
 }
-export type DeserializedMessage = string | Object;
+export type DeserializedMessage = string | object;
 
 export default class WS {
   server: Server;
