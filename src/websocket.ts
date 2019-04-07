@@ -32,7 +32,8 @@ export default class WS {
     this.serializer = jsonProtocol ? JSON.stringify : identity;
     this.deserializer = jsonProtocol ? JSON.parse : identity;
 
-    let connectionResolver: (socket: WebSocket) => void, closedResolver!: () => void;
+    let connectionResolver: (socket: WebSocket) => void,
+      closedResolver!: () => void;
     this.connected = new Promise(done => (connectionResolver = done));
     this.closed = new Promise(done => (closedResolver = done));
 
