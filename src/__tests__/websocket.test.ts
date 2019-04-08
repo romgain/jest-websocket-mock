@@ -154,4 +154,13 @@ describe("The WS helper", () => {
     expect(error.origin).toBe("ws://localhost:1234/");
     expect(error.type).toBe("error");
   });
+
+  it("resolves the client socket that connected", async () => {
+    const server = new WS("ws://localhost:1234");
+    const client = new WebSocket("ws://localhost:1234");
+
+    const socket = await server.connected;
+
+    expect(socket).toStrictEqual(client);
+  });
 });

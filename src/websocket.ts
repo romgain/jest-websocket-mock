@@ -9,7 +9,7 @@ export type DeserializedMessage = string | object;
 
 export default class WS {
   server: Server;
-  connected: Promise<{}>;
+  connected: Promise<WebSocket>;
   closed: Promise<{}>;
   serializer: (deserializedMessage: DeserializedMessage) => string;
   deserializer: (message: string) => DeserializedMessage;
@@ -32,7 +32,8 @@ export default class WS {
     this.serializer = jsonProtocol ? JSON.stringify : identity;
     this.deserializer = jsonProtocol ? JSON.parse : identity;
 
-    let connectionResolver: () => void, closedResolver!: () => void;
+    let connectionResolver: (socket: WebSocket) => void,
+      closedResolver!: () => void;
     this.connected = new Promise(done => (connectionResolver = done));
     this.closed = new Promise(done => (closedResolver = done));
 
@@ -41,7 +42,7 @@ export default class WS {
     this.server.on("close", closedResolver);
 
     this.server.on("connection", socket => {
-      connectionResolver();
+      connectionResolver(socket);
 
       // Ignore invalid MockSocket type definitions that will be fixed in
       // https://github.com/thoov/mock-socket/pull/254
