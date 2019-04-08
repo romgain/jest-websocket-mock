@@ -24,7 +24,7 @@ can send messages to connected clients.
 ```js
 import WS from "jest-websocket-mock";
 
-// create a WS instance, listening to port 1234 on localhost
+// create a WS instance, listening on port 1234 on localhost
 const server = new WS("ws://localhost:1234");
 
 // real clients can connect
