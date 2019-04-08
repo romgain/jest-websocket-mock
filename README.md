@@ -60,7 +60,8 @@ server.send({ type: "GREETING", payload: "hello" });
 A `WS` instance has the following attributes:
 
 * `connected`: a Promise that resolves every time the `WS` instance receives a
-new connection.
+new connection. The resolved value is the `WebSocket` instance that initiated
+the connection.
 * `closed`: a Promise that resolves every time a connection to a `WS` instance
 is closed.
 * `nextMessage`: a Promise that resolves every time a `WS` instance receives a
