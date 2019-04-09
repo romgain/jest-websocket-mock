@@ -229,3 +229,7 @@ export { WebSocket as default } from "mock-socket";
 For a real life example, see the
 [examples directory](https://github.com/romgain/jest-websocket-mock/tree/master/examples),
 and in particular the saga tests.
+
+## Contributing
+
+See the [contributing guide](https://github.com/romgain/jest-websocket-mock/tree/master/CONTRIBUTING.md).
