@@ -5,8 +5,12 @@ import { DeserializedMessage } from "./websocket";
 declare global {
   namespace jest {
     interface Matchers<R> {
-      toReceiveMessage(message: DeserializedMessage): R;
-      toHaveReceivedMessages(messages: Array<DeserializedMessage>): R;
+      toReceiveMessage<TMessage = object>(
+        message: DeserializedMessage<TMessage>
+      ): R;
+      toHaveReceivedMessages<TMessage = object>(
+        messages: Array<DeserializedMessage<TMessage>>
+      ): R;
     }
   }
 }
