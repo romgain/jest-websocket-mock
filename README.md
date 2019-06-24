@@ -191,7 +191,7 @@ test("the mock server sends errors to connected clients", async () => {
 
 ### Add custom event listeners
 
-## For instance, to refuse connections:
+#### For instance, to refuse connections:
 
 ```js
 it("the server can refuse connections", async () => {
