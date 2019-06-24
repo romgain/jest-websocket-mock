@@ -65,7 +65,6 @@ export default class WS {
 
   close() {
     this.server.emit("close", null);
-    this.server.stop();
     this.server.close();
   }
 

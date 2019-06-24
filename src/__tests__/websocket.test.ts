@@ -132,6 +132,9 @@ describe("The WS helper", () => {
     server.send("hello everyone");
     server.close();
     expect(disconnected).toBe(true);
+
+    // ensure that the WebSocket mock set up by mock-socket is still present
+    expect(WebSocket).toBeDefined();
   });
 
   it("sends errors to connected clients", async () => {
