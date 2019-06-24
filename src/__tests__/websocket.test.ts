@@ -137,6 +137,30 @@ describe("The WS helper", () => {
     expect(WebSocket).toBeDefined();
   });
 
+  it("can refuse connections", async () => {
+    expect.assertions(6);
+
+    const server = new WS("ws://localhost:1234");
+    server.on("connection", socket => {
+      socket.close({ wasClean: false, code: 1003, reason: "NOPE" });
+    });
+
+    const client = new WebSocket("ws://localhost:1234");
+    client.onclose = (event: CloseEvent) => {
+      expect(event.code).toBe(1003);
+      expect(event.wasClean).toBe(false);
+      expect(event.reason).toBe("NOPE");
+    };
+
+    expect(client.readyState).toBe(WebSocket.CONNECTING);
+
+    await server.connected;
+    expect(client.readyState).toBe(WebSocket.CLOSING);
+
+    await server.closed;
+    expect(client.readyState).toBe(WebSocket.CLOSED);
+  });
+
   it("sends errors to connected clients", async () => {
     const server = new WS("ws://localhost:1234");
     const client = new WebSocket("ws://localhost:1234");

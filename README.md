@@ -84,6 +84,7 @@ A `WS` instance has the following attributes:
 - `close`: gracefully closes all opened connections.
 - `error`: sends an error message to all connected clients and closes all
   opened connections.
+- `on`: attach event listeners to handle new `connection`, `message` and `close` events. The callback receives the `socket` as its only argument.
 
 ## Run assertions on received messages
 
@@ -185,6 +186,34 @@ test("the mock server sends errors to connected clients", async () => {
   expect(disconnected).toBe(true);
   expect(error.origin).toBe("ws://localhost:1234/");
   expect(error.type).toBe("error");
+});
+```
+
+### Add custom event listeners
+
+## For instance, to refuse connections:
+
+```js
+it("the server can refuse connections", async () => {
+  const server = new WS("ws://localhost:1234");
+  server.on("connection", socket => {
+    socket.close({ wasClean: false, code: 1003, reason: "NOPE" });
+  });
+
+  const client = new WebSocket("ws://localhost:1234");
+  client.onclose = (event: CloseEvent) => {
+    expect(event.code).toBe(1003);
+    expect(event.wasClean).toBe(false);
+    expect(event.reason).toBe("NOPE");
+  };
+
+  expect(client.readyState).toBe(WebSocket.CONNECTING);
+
+  await server.connected;
+  expect(client.readyState).toBe(WebSocket.CLOSING);
+
+  await server.closed;
+  expect(client.readyState).toBe(WebSocket.CLOSED);
 });
 ```
 

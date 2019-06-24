@@ -55,6 +55,14 @@ export default class WS {
     });
   }
 
+  on(
+    eventName: "connection" | "message" | "close",
+    callback: (socket: Server) => void
+  ): void {
+    // @ts-ignore Work around incorrect mock-socket types
+    this.server.on(eventName, callback);
+  }
+
   get nextMessage() {
     return this.messagesToConsume.get();
   }
