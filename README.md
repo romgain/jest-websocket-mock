@@ -1,7 +1,8 @@
 # Jest websocket mock
 
-[![Build Status](https://travis-ci.org/romgain/jest-websocket-mock.svg?branch=master)](https://travis-ci.org/romgain/jest-websocket-mock)
 [![npm version](https://badge.fury.io/js/jest-websocket-mock.svg)](https://badge.fury.io/js/jest-websocket-mock)
+[![Build Status](https://travis-ci.org/romgain/jest-websocket-mock.svg?branch=master)](https://travis-ci.org/romgain/jest-websocket-mock)
+[![Coverage report](https://codecov.io/gh/romgain/jest-websocket-mock/master/graph/badge.svg)](https://codecov.io/gh/romgain/jest-websocket-mock)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
 A set of utilities and Jest matchers to help testing complex websocket interactions.

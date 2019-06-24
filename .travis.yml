@@ -6,6 +6,7 @@ node_js:
 
 before_install:
   - npm install
+  - npm install -g codecov
 
 script:
   - npm test -- --coverage
@@ -19,3 +20,6 @@ script:
   - npm install ../jest-websocket-mock-*
   - SKIP_PREFLIGHT_CHECK=true npm test -- --coverage
   - cd ..
+
+after_success:
+  - codecov
