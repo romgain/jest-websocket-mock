@@ -7,7 +7,7 @@ declare global {
     interface Matchers<R> {
       toReceiveMessage<TMessage = object>(
         message: DeserializedMessage<TMessage>
-      ): R;
+      ): Promise<R>;
       toHaveReceivedMessages<TMessage = object>(
         messages: Array<DeserializedMessage<TMessage>>
       ): R;
