@@ -4,7 +4,7 @@ import { DeserializedMessage } from "./websocket";
 
 declare global {
   namespace jest {
-    interface Matchers<R> {
+    interface Matchers<R, T> {
       toReceiveMessage<TMessage = object>(
         message: DeserializedMessage<TMessage>
       ): Promise<R>;
