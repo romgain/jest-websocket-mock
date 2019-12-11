@@ -54,7 +54,7 @@
     "jest": "^24.5.0",
     "mock-socket": "~8.0",
     "prettier": "^1.16.4",
-    "rimraf": "^2.6.2",
+    "rimraf": "^3.0.0",
     "rollup": "^1.27.10",
     "rollup-plugin-babel": "^4.0.3",
     "rollup-plugin-node-resolve": "^4.0.1",
