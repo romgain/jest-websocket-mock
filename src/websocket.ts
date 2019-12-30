@@ -1,4 +1,4 @@
-import { Server } from "mock-socket";
+import { Server, WebSocket } from "mock-socket";
 import Queue from "./queue";
 
 const identity = (x: string) => x;
@@ -41,14 +41,11 @@ export default class WS {
 
     this.server.on("close", closedResolver);
 
-    this.server.on("connection", socket => {
+    this.server.on("connection", (socket: WebSocket) => {
       connectionResolver(socket);
 
-      // Ignore invalid MockSocket type definitions that will be fixed in
-      // https://github.com/thoov/mock-socket/pull/254
-      // @ts-ignore
-      socket.on("message", (message: string) => {
-        const parsedMessage = this.deserializer(message);
+      socket.on("message", message => {
+        const parsedMessage = this.deserializer(message as string);
         this.messages.push(parsedMessage);
         this.messagesToConsume.put(parsedMessage);
       });
@@ -57,9 +54,8 @@ export default class WS {
 
   on(
     eventName: "connection" | "message" | "close",
-    callback: (socket: Server) => void
+    callback: (socket: WebSocket) => void
   ): void {
-    // @ts-ignore Work around incorrect mock-socket types
     this.server.on(eventName, callback);
   }
 
