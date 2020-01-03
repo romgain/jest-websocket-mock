@@ -54,7 +54,7 @@ export default class WS {
 
   on(
     eventName: "connection" | "message" | "close",
-    callback: (socket: Server) => void
+    callback: (socket: WebSocket) => void
   ): void {
     // @ts-ignore Work around incorrect mock-socket types
     this.server.on(eventName, callback);
