@@ -254,6 +254,12 @@ to set up a [manual mock](https://jestjs.io/docs/en/manual-mocks#mocking-node-mo
 export { WebSocket as default } from "mock-socket";
 ```
 
+**NOTE** The `ws` library is not 100% compatible with the browser API, and
+the `mock-socket` library that `jest-websocket-mock` uses under the hood only
+implements the browser API.
+As a result, `jest-websocket-mock` will only work with the `ws` library if you
+restrict yourself to the browser APIs!
+
 ## Examples
 
 For a real life example, see the
