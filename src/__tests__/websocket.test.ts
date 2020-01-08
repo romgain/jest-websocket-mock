@@ -161,6 +161,25 @@ describe("The WS helper", () => {
     expect(client.readyState).toBe(WebSocket.CLOSED);
   });
 
+  it("can send messages in the connection callback", async () => {
+    expect.assertions(1);
+
+    const server = new WS("ws://localhost:1234");
+    let receivedMessage = null;
+
+    server.on("connection", socket => {
+      socket.send("hello there");
+    });
+
+    const client = new WebSocket("ws://localhost:1234");
+    client.onmessage = event => {
+      receivedMessage = event.data;
+    };
+
+    await server.connected;
+    expect(receivedMessage).toBe("hello there");
+  });
+
   it("sends errors to connected clients", async () => {
     const server = new WS("ws://localhost:1234");
     const client = new WebSocket("ws://localhost:1234");

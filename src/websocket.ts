@@ -1,4 +1,4 @@
-import { Server, WebSocket } from "mock-socket";
+import { Server, WebSocket, CloseOptions } from "mock-socket";
 import Queue from "./queue";
 
 const identity = (x: string) => x;
@@ -6,6 +6,14 @@ interface WSOptions {
   jsonProtocol?: boolean;
 }
 export type DeserializedMessage<TMessage = object> = string | TMessage;
+
+// The WebSocket object passed to the `connection` callback is actually
+// a WebSocket proxy that overrides the signature of the `close` method.
+// To work around this inconsistency, we need to override the WebSocket
+// interface. See https://github.com/romgain/jest-websocket-mock/issues/26#issuecomment-571579567
+interface MockWebSocket extends Omit<WebSocket, "close"> {
+  close(options?: CloseOptions): void;
+}
 
 export default class WS {
   server: Server;
@@ -54,9 +62,9 @@ export default class WS {
 
   on(
     eventName: "connection" | "message" | "close",
-    callback: (socket: Server) => void
+    callback: (socket: MockWebSocket) => void
   ): void {
-    // @ts-ignore Work around incorrect mock-socket types
+    // @ts-ignore https://github.com/romgain/jest-websocket-mock/issues/26#issuecomment-571579567
     this.server.on(eventName, callback);
   }
 
