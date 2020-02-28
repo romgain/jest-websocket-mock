@@ -122,19 +122,48 @@ describe("The WS helper", () => {
   it("closes the connection", async () => {
     const server = new WS("ws://localhost:1234");
     const client = new WebSocket("ws://localhost:1234");
+    const closeCallback = jest.fn();
     await server.connected;
 
-    let disconnected = false;
-    client.onclose = () => {
-      disconnected = true;
-    };
+    client.onclose = closeCallback;
 
     server.send("hello everyone");
     server.close();
-    expect(disconnected).toBe(true);
+
+    expect(closeCallback).toHaveBeenCalledTimes(1);
+    expect(closeCallback).toHaveBeenCalledWith(
+      expect.objectContaining({
+        code: 1000,
+        eventPhase: 0,
+        reason: "",
+        type: "close",
+        wasClean: true,
+      })
+    );
 
     // ensure that the WebSocket mock set up by mock-socket is still present
     expect(WebSocket).toBeDefined();
+  });
+
+  it("closes the connection with a custom close code", async () => {
+    const server = new WS("ws://localhost:1234");
+    const client = new WebSocket("ws://localhost:1234");
+    const closeCallback = jest.fn();
+    await server.connected;
+    client.onclose = closeCallback;
+
+    server.close({ code: 1234, reason: "boom", wasClean: false });
+
+    expect(closeCallback).toHaveBeenCalledTimes(1);
+    expect(closeCallback).toHaveBeenCalledWith(
+      expect.objectContaining({
+        code: 1234,
+        eventPhase: 0,
+        reason: "boom",
+        type: "close",
+        wasClean: false,
+      })
+    );
   });
 
   it("can refuse connections", async () => {

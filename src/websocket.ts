@@ -76,9 +76,8 @@ export default class WS {
     this.server.emit("message", this.serializer(message));
   }
 
-  close() {
-    this.server.emit("close", null);
-    this.server.close();
+  close(options?: CloseOptions) {
+    this.server.close(options);
   }
 
   error() {
