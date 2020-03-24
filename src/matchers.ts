@@ -48,7 +48,7 @@ expect.extend({
 
     const messageOrTimeout = await Promise.race([
       ws.nextMessage,
-      new Promise(resolve => setTimeout(() => resolve(TIMEOUT), WAIT_DELAY)),
+      new Promise((resolve) => setTimeout(() => resolve(TIMEOUT), WAIT_DELAY)),
     ]);
 
     if (messageOrTimeout === TIMEOUT) {
@@ -108,9 +108,9 @@ expect.extend({
       };
     }
 
-    const received = messages.map(expected =>
+    const received = messages.map((expected) =>
       // object comparison to handle JSON protocols
-      ws.messages.some(actual => this.equals(actual, expected))
+      ws.messages.some((actual) => this.equals(actual, expected))
     );
     const pass = this.isNot ? received.some(Boolean) : received.every(Boolean);
     const message = pass
