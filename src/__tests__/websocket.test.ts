@@ -51,7 +51,7 @@ describe("The WS helper", () => {
     "abcdef".split("").forEach(client.send.bind(client));
 
     let waitedEnough: () => void;
-    const waitABit = new Promise(done => (waitedEnough = done));
+    const waitABit = new Promise((done) => (waitedEnough = done));
 
     setTimeout(async () => {
       await server.nextMessage;
@@ -84,10 +84,10 @@ describe("The WS helper", () => {
       client2: Array<string>;
     }
     const messages: Messages = { client1: [], client2: [] };
-    client1.onmessage = e => {
+    client1.onmessage = (e) => {
       messages.client1.push(e.data);
     };
-    client2.onmessage = e => {
+    client2.onmessage = (e) => {
       messages.client2.push(e.data);
     };
 
@@ -109,7 +109,7 @@ describe("The WS helper", () => {
     expect(received).toEqual({ type: "GREETING", payload: "hello" });
 
     let message = null;
-    client.onmessage = e => {
+    client.onmessage = (e) => {
       message = e.data;
     };
 
@@ -170,7 +170,7 @@ describe("The WS helper", () => {
     expect.assertions(6);
 
     const server = new WS("ws://localhost:1234");
-    server.on("connection", socket => {
+    server.on("connection", (socket) => {
       socket.close({ wasClean: false, code: 1003, reason: "NOPE" });
     });
 
@@ -196,12 +196,12 @@ describe("The WS helper", () => {
     const server = new WS("ws://localhost:1234");
     let receivedMessage = null;
 
-    server.on("connection", socket => {
+    server.on("connection", (socket) => {
       socket.send("hello there");
     });
 
     const client = new WebSocket("ws://localhost:1234");
-    client.onmessage = event => {
+    client.onmessage = (event) => {
       receivedMessage = event.data;
     };
 
@@ -219,7 +219,7 @@ describe("The WS helper", () => {
     client.onclose = () => {
       disconnected = true;
     };
-    client.onerror = e => {
+    client.onerror = (e) => {
       error = e;
     };
 

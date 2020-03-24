@@ -27,7 +27,7 @@ export default class WS {
   messagesToConsume = new Queue();
 
   static clean() {
-    WS.instances.forEach(instance => {
+    WS.instances.forEach((instance) => {
       instance.close();
       instance.messages = [];
     });
@@ -42,8 +42,8 @@ export default class WS {
 
     let connectionResolver: (socket: WebSocket) => void,
       closedResolver!: () => void;
-    this.connected = new Promise(done => (connectionResolver = done));
-    this.closed = new Promise(done => (closedResolver = done));
+    this.connected = new Promise((done) => (connectionResolver = done));
+    this.closed = new Promise((done) => (closedResolver = done));
 
     this.server = new Server(url);
 
@@ -52,7 +52,7 @@ export default class WS {
     this.server.on("connection", (socket: WebSocket) => {
       connectionResolver(socket);
 
-      socket.on("message", message => {
+      socket.on("message", (message) => {
         const parsedMessage = this.deserializer(message as string);
         this.messages.push(parsedMessage);
         this.messagesToConsume.put(parsedMessage);
