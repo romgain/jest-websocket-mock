@@ -209,6 +209,22 @@ describe("The WS helper", () => {
     expect(receivedMessage).toBe("hello there");
   });
 
+  it("provides a callback when receiving messages", async () => {
+    const server = new WS("ws://localhost:1234");
+    expect.assertions(1);
+
+    server.on("connection", (socket) => {
+      socket.on("message", (msg) => {
+        expect(msg).toEqual("client says hi");
+      });
+    });
+
+    const client = new WebSocket("ws://localhost:1234");
+    await server.connected;
+    client.send("client says hi");
+    await server.nextMessage;
+  });
+
   it("sends errors to connected clients", async () => {
     const server = new WS("ws://localhost:1234");
     const client = new WebSocket("ws://localhost:1234");
