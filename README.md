@@ -219,13 +219,13 @@ it("the server can refuse connections", async () => {
 
 ### Environment set up and tear down between tests
 
-You can set up a mock server and tear it down between test:
+You can set up a mock server and a client, and reset them between tests:
 
 ```js
 beforeEach(async () => {
-  ws = new WS("ws://localhost:1234");
-  await ws.connected;
-  ws.send("Connected!");
+  server = new WS("ws://localhost:1234");
+  client = new WebSocket("ws://localhost:1234");
+  await server.connected;
 });
 
 afterEach(() => {
