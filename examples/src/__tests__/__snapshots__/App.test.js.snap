@@ -2,10 +2,23 @@
 
 exports[`The App component renders the app skeleton 1`] = `
 <div
-  className="App"
+  class="App"
 >
-  <ConnectionIndicator />
-  <Messages />
-  <MessageInput />
+  <div
+    class="ConnectionIndicator ConnectionIndicator--connected"
+    title="connected"
+  />
+  <div
+    class="Messages"
+  />
+  <form
+    class="MessageForm"
+  >
+    <input
+      class="MessageInput"
+      placeholder="type your message here..."
+      value=""
+    />
+  </form>
 </div>
 `;

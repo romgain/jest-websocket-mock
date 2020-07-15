@@ -22,6 +22,7 @@ class MessageInput extends PureComponent {
           className="MessageInput"
           value={message}
           onChange={this.onChange}
+          placeholder="type your message here..."
         />
       </form>
     );

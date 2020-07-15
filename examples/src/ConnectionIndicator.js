@@ -8,9 +8,10 @@ const ConnectionIndicator = ({ connected }) => (
         ? "ConnectionIndicator ConnectionIndicator--connected"
         : "ConnectionIndicator ConnectionIndicator--disconnected"
     }
+    title={connected ? "connected" : "disconnected"}
   />
 );
 
-export default connect(state => ({ connected: state.connected }))(
+export default connect((state) => ({ connected: state.connected }))(
   ConnectionIndicator
 );

@@ -1,11 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-const Message = ({ text, side }) => (
-  <div>
-    ({side}) {text}
-  </div>
-);
+const Message = ({ text, side }) => <div>{`(${side}) ${text}`}</div>;
 
 const Messages = ({ messages }) => (
   <div className="Messages">
@@ -15,4 +11,4 @@ const Messages = ({ messages }) => (
   </div>
 );
 
-export default connect(state => ({ messages: state.messages }))(Messages);
+export default connect((state) => ({ messages: state.messages }))(Messages);
