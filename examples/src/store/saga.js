@@ -1,5 +1,5 @@
-import { delay, eventChannel, END } from "redux-saga";
-import { cancel, call, fork, put, take } from "redux-saga/effects";
+import { eventChannel, END } from "redux-saga";
+import { cancel, call, delay, fork, put, take } from "redux-saga/effects";
 import { actions } from "./reducer";
 
 const RECONNECT_TIMEOUT = 6000;
@@ -48,7 +48,7 @@ export default function* saga() {
     channel.close();
     yield cancel(sendMessageTask);
     // ...and start again
-    yield call(delay, RECONNECT_TIMEOUT);
+    yield delay(RECONNECT_TIMEOUT);
     return yield call(saga);
   }
 }
