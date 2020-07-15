@@ -1,5 +1,6 @@
 import { Server, WebSocket, CloseOptions } from "mock-socket";
 import Queue from "./queue";
+import act from "./act-compat";
 
 const identity = (x: string) => x;
 interface WSOptions {
@@ -17,14 +18,15 @@ interface MockWebSocket extends Omit<WebSocket, "close"> {
 
 export default class WS {
   server: Server;
-  connected: Promise<WebSocket>;
-  closed: Promise<{}>;
   serializer: (deserializedMessage: DeserializedMessage) => string;
   deserializer: (message: string) => DeserializedMessage;
 
   static instances: Array<WS> = [];
   messages: Array<DeserializedMessage> = [];
   messagesToConsume = new Queue();
+
+  private _isConnected: Promise<WebSocket>;
+  private _isClosed: Promise<{}>;
 
   static clean() {
     WS.instances.forEach((instance) => {
@@ -42,8 +44,8 @@ export default class WS {
 
     let connectionResolver: (socket: WebSocket) => void,
       closedResolver!: () => void;
-    this.connected = new Promise((done) => (connectionResolver = done));
-    this.closed = new Promise((done) => (closedResolver = done));
+    this._isConnected = new Promise((done) => (connectionResolver = done));
+    this._isClosed = new Promise((done) => (closedResolver = done));
 
     this.server = new Server(url);
 
@@ -60,6 +62,37 @@ export default class WS {
     });
   }
 
+  get connected() {
+    let resolve: (socket: WebSocket) => void;
+    const connectedPromise = new Promise<WebSocket>((done) => (resolve = done));
+    const waitForConnected = async () => {
+      await act(async () => {
+        await this._isConnected;
+      });
+      resolve(await this._isConnected); // make sure `await act` is really done
+    };
+    waitForConnected();
+    return connectedPromise;
+  }
+
+  get closed() {
+    let resolve: () => void;
+    const closedPromise = new Promise<void>((done) => (resolve = done));
+    const waitForclosed = async () => {
+      await act(async () => {
+        await this._isClosed;
+      });
+      await this._isClosed; // make sure `await act` is really done
+      resolve();
+    };
+    waitForclosed();
+    return closedPromise;
+  }
+
+  get nextMessage() {
+    return this.messagesToConsume.get();
+  }
+
   on(
     eventName: "connection" | "message" | "close",
     callback: (socket: MockWebSocket) => void
@@ -68,20 +101,22 @@ export default class WS {
     this.server.on(eventName, callback);
   }
 
-  get nextMessage() {
-    return this.messagesToConsume.get();
-  }
-
   send(message: DeserializedMessage) {
-    this.server.emit("message", this.serializer(message));
+    act(() => {
+      this.server.emit("message", this.serializer(message));
+    });
   }
 
   close(options?: CloseOptions) {
-    this.server.close(options);
+    act(() => {
+      this.server.close(options);
+    });
   }
 
   error() {
-    this.server.emit("error", null);
+    act(() => {
+      this.server.emit("error", null);
+    });
     this.server.close();
   }
 }

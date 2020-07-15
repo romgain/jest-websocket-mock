@@ -13,7 +13,7 @@ In particular:
 
 - [testing a redux saga that manages a websocket connection](https://github.com/romgain/jest-websocket-mock/blob/master/examples/redux-saga/src/__tests__/saga.test.js)
 - [testing a component using the saga above](https://github.com/romgain/jest-websocket-mock/blob/master/examples/redux-saga/src/__tests__/App.test.js)
-- [testing a component that manages a websocket connection using react hooks](https://github.com/romgain/jest-websocket-mock/blob/master/examples/hooks/src/__tests__/App.test.js)
+- [testing a component that manages a websocket connection using react hooks](https://github.com/romgain/jest-websocket-mock/blob/master/examples/hooks/src/App.test.tsx)
 
 ## Install
 
@@ -238,6 +238,15 @@ afterEach(() => {
   WS.clean();
 });
 ```
+
+## Testing React applications
+
+When testing React applications, `jest-websocket-mock` will look for
+`@testing-library/react`'s implementation of [`act`](https://reactjs.org/docs/test-utils.html#act).
+If it is available, it will wrap all the necessary calls in `act`, so you don't have to.
+
+If `@testing-library/react` is not available, we will assume that you're not testing a React application,
+and you might need to call `act` manually.
 
 ## Using `jest-websocket-mock` to interact with a non-global WebSocket object
 

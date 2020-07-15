@@ -5,7 +5,7 @@ import pkg from "./package.json";
 export default [
   {
     input: "src/index.ts",
-    external: ["mock-socket", "jest-diff"],
+    external: ["mock-socket", "jest-diff", "@testing-library/react"],
     plugins: [
       resolve({ extensions: [".js", ".ts"] }),
       babel({ extensions: [".js", ".ts"] }),

@@ -1,5 +1,5 @@
 import React from "react";
-import { act, render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import WS from "jest-websocket-mock";
 import App from "./App";
@@ -9,30 +9,24 @@ beforeEach(() => {
   ws = new WS("ws://localhost:8080");
 });
 afterEach(() => {
-  act(() => {
-    WS.clean();
-  });
+  WS.clean();
 });
 
 describe("The App component", () => {
   it("renders a dot indicating the connection status", async () => {
     render(<App />);
     expect(screen.getByTitle("disconnected")).toBeInTheDocument();
-    await act(async () => {
-      await ws.connected;
-    });
+
+    await ws.connected;
     expect(screen.getByTitle("connected")).toBeInTheDocument();
-    act(() => {
-      ws.close();
-    });
+
+    ws.close();
     expect(screen.getByTitle("disconnected")).toBeInTheDocument();
   });
 
   it("sends and receives messages", async () => {
     render(<App />);
-    await act(async () => {
-      await ws.connected;
-    });
+    await ws.connected;
 
     const input = screen.getByPlaceholderText("type your message here...");
     userEvent.type(input, "Hello there");
@@ -41,9 +35,7 @@ describe("The App component", () => {
     await expect(ws).toReceiveMessage("Hello there");
     expect(screen.getByText("(sent) Hello there")).toBeInTheDocument();
 
-    act(() => {
-      ws.send("[echo] Hello there");
-    });
+    ws.send("[echo] Hello there");
     expect(
       screen.getByText("(received) [echo] Hello there")
     ).toBeInTheDocument();
