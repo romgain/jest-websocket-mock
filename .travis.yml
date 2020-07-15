@@ -14,12 +14,17 @@ script:
   - npm run prettier:check
   - npm run build
   - npm pack
-  # Run the tests in the examples folder:
-  - cd examples
+  # Run the tests in the examples folder
+  # redux-saga:
+  - cd examples/redux-saga
   - npm install
-  - npm install ../jest-websocket-mock-*
-  - SKIP_PREFLIGHT_CHECK=true npm test -- --coverage
-  - cd ..
+  - npm install ../../jest-websocket-mock-*
+  - npm test -- --coverage
+  # hooks:
+  - cd ../hooks
+  - npm install
+  - npm install ../../jest-websocket-mock-*
+  - npm test -- --coverage
 
 after_success:
   - codecov

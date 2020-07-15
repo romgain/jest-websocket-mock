@@ -7,7 +7,13 @@
 
 A set of utilities and Jest matchers to help testing complex websocket interactions.
 
-**Examples:** [See examples in a sample redux-saga app](https://github.com/romgain/jest-websocket-mock/blob/master/examples/src/__tests__/saga.test.js)
+**Examples:**
+Several examples are provided in the [examples folder](https://github.com/romgain/jest-websocket-mock/blob/master/examples/).
+In particular:
+
+- [testing a redux saga that manages a websocket connection](https://github.com/romgain/jest-websocket-mock/blob/master/examples/redux-saga/src/__tests__/saga.test.js)
+- [testing a component using the saga above](https://github.com/romgain/jest-websocket-mock/blob/master/examples/redux-saga/src/__tests__/App.test.js)
+- [testing a component that manages a websocket connection using react hooks](https://github.com/romgain/jest-websocket-mock/blob/master/examples/hooks/src/__tests__/App.test.js)
 
 ## Install
 

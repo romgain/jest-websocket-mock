@@ -1,8 +1,8 @@
 /**
  * This is a simple example server, mostly here for demonstration
  * purposes.
- * The `src` folder contains actual client code with supporting
- * tests.
+ * The subfolders in this directory contain actual client code with
+ * supporting tests.
  **/
 
 const WebSocket = require("ws");
