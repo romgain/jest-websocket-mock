@@ -190,6 +190,35 @@ describe("The WS helper", () => {
     expect(client.readyState).toBe(WebSocket.CLOSED);
   });
 
+  it("correctly triggers callbacks when disconnecting/reconnecting several times", async () => {
+    let server = new WS("ws://localhost:1234");
+    const open = jest.fn();
+    const close = jest.fn();
+    let client = new WebSocket("ws://localhost:1234");
+    client.onopen = open;
+    client.onclose = close;
+    await server.connected;
+
+    // disconnect
+    server.close();
+    await server.closed;
+    expect(open).toHaveBeenCalledTimes(1);
+    expect(close).toHaveBeenCalledTimes(1);
+
+    // reconnect
+    server = new WS("ws://localhost:1234");
+    client = new WebSocket("ws://localhost:1234");
+    client.onopen = open;
+    client.onclose = close;
+    await server.connected;
+    expect(open).toHaveBeenCalledTimes(2);
+
+    // re-disconnect
+    client.close();
+    await server.closed;
+    expect(close).toHaveBeenCalledTimes(2);
+  });
+
   it("can send messages in the connection callback", async () => {
     expect.assertions(1);
 
