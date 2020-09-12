@@ -123,24 +123,21 @@ describe("The WS helper", () => {
     const verifyClient = jest.fn();
     verifyClient.mockReturnValueOnce(false).mockReturnValue(true);
     const server = new WS("ws://localhost:1234", {
-      verifyClient: verifyClient
+      verifyClient: verifyClient,
     });
     const client1 = new WebSocket("ws://localhost:1234");
 
     const errorCallback = jest.fn();
     client1.onerror = errorCallback;
 
-
     new WebSocket("ws://localhost:1234"); /* Need something to wait on */
     await server.connected;
-
-
 
     expect(verifyClient).toHaveBeenCalledTimes(2);
     expect(errorCallback).toHaveBeenCalledTimes(1);
     expect(errorCallback).toHaveBeenCalledWith(
       expect.objectContaining({
-        type: "error"
+        type: "error",
       })
     );
 
