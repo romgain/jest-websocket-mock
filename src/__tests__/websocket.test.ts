@@ -120,20 +120,64 @@ describe("The WS helper", () => {
   });
 
   it("handles the verifyClient option", async () => {
-    const verifyClient = jest.fn();
-    verifyClient.mockReturnValueOnce(false).mockReturnValue(true);
-    const server = new WS("ws://localhost:1234", {
-      verifyClient: verifyClient,
-    });
-    const client1 = new WebSocket("ws://localhost:1234");
-
+    const verifyClient = jest.fn().mockReturnValue(false);
+    new WS("ws://localhost:1234", { verifyClient: verifyClient });
     const errorCallback = jest.fn();
-    client1.onerror = errorCallback;
 
-    new WebSocket("ws://localhost:1234"); /* Need something to wait on */
-    await server.connected;
+    await expect(
+      new Promise((resolve, reject) => {
+        errorCallback.mockImplementation(reject);
+        const client = new WebSocket("ws://localhost:1234");
+        client.onerror = errorCallback;
+        client.onopen = resolve;
+      })
+    ).rejects.toHaveProperty("type", "error"); // WebSocket onerror event gets called with an event of type error and not an error
 
-    expect(verifyClient).toHaveBeenCalledTimes(2);
+    expect(verifyClient).toHaveBeenCalledTimes(1);
+    expect(errorCallback).toHaveBeenCalledTimes(1);
+    expect(errorCallback).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: "error",
+      })
+    );
+
+    // ensure that the WebSocket mock set up by mock-socket is still present
+    expect(WebSocket).toBeDefined();
+  });
+
+  it("handles the selectProtocol option", async () => {
+    const selectProtocol = jest.fn().mockReturnValue("bar");
+    new WS("ws://localhost:1234", { selectProtocol: selectProtocol });
+    const errorCallback = jest.fn();
+
+    await expect(
+      new Promise((resolve, reject) => {
+        errorCallback.mockImplementationOnce(reject);
+        const client = new WebSocket("ws://localhost:1234", "foo");
+        client.onerror = errorCallback;
+        client.onopen = resolve;
+      })
+    ).rejects.toHaveProperty("type", "error"); // WebSocket onerror event gets called with an event of type error and not an error
+
+    await expect(
+      new Promise((resolve, reject) => {
+        errorCallback.mockImplementationOnce(reject);
+        const client = new WebSocket("ws://localhost:1234", "bar");
+        client.onerror = errorCallback;
+        client.onopen = resolve;
+      })
+    ).resolves.toHaveProperty("type", "open");
+
+    await expect(
+      new Promise((resolve, reject) => {
+        errorCallback.mockImplementationOnce(reject);
+        const client = new WebSocket("ws://localhost:1234", ["foo", "bar"]);
+        client.onerror = errorCallback;
+        client.onopen = resolve;
+      })
+    ).resolves.toHaveProperty("type", "open");
+
+    expect(selectProtocol).toHaveBeenCalledTimes(3);
     expect(errorCallback).toHaveBeenCalledTimes(1);
     expect(errorCallback).toHaveBeenCalledWith(
       expect.objectContaining({

@@ -170,6 +170,92 @@ test("the mock server seamlessly handles JSON protocols", async () => {
 });
 ```
 
+### verifyClient server option
+
+A `verifyClient` function can be given in the options for the `jest-websocket-mock` constructor.
+This can be used to test behaviour for a client that connects to a WebSocket server it's blacklisted from for example.
+
+**Note** : _Currently `mock-socket`'s implementation does not send any parameters to this function (unlike the real `ws` implementation. This might be because the check is done in the constructor for a WebSocket client and not on the server side_
+
+```js
+test("handles the verifyClient option", async () => {
+  const verifyClient = jest.fn().mockReturnValue(false);
+  new WS("ws://localhost:1234", { verifyClient: verifyClient });
+  const errorCallback = jest.fn();
+
+  await expect(
+    new Promise((resolve, reject) => {
+      errorCallback.mockImplementation(reject);
+      const client = new WebSocket("ws://localhost:1234");
+      client.onerror = errorCallback;
+      client.onopen = resolve;
+    })
+  ).rejects.toHaveProperty("type", "error"); // WebSocket onerror event gets called with an event of type error and not an error
+
+  expect(verifyClient).toHaveBeenCalledTimes(1);
+  expect(errorCallback).toHaveBeenCalledTimes(1);
+  expect(errorCallback).toHaveBeenCalledWith(
+    expect.objectContaining({
+      type: "error",
+    })
+  );
+
+  // ensure that the WebSocket mock set up by mock-socket is still present
+  expect(WebSocket).toBeDefined();
+});
+```
+
+### selectProtocol server option
+
+A `selectProtocol` function can be given in the options for the `jest-websocket-mock` constructor.
+This can be used to test behaviour for a client that connects to a WebSocket server using the wrong protocol.
+
+```js
+test("handles the selectProtocol option", async () => {
+  const selectProtocol = jest.fn().mockReturnValue("bar");
+  new WS("ws://localhost:1234", { selectProtocol: selectProtocol });
+  const errorCallback = jest.fn();
+
+  await expect(
+    new Promise((resolve, reject) => {
+      errorCallback.mockImplementationOnce(reject);
+      const client = new WebSocket("ws://localhost:1234", "foo");
+      client.onerror = errorCallback;
+      client.onopen = resolve;
+    })
+  ).rejects.toHaveProperty("type", "error"); // WebSocket onerror event gets called with an event of type error and not an error
+
+  await expect(
+    new Promise((resolve, reject) => {
+      errorCallback.mockImplementationOnce(reject);
+      const client = new WebSocket("ws://localhost:1234", "bar");
+      client.onerror = errorCallback;
+      client.onopen = resolve;
+    })
+  ).resolves.toHaveProperty("type", "open");
+
+  await expect(
+    new Promise((resolve, reject) => {
+      errorCallback.mockImplementationOnce(reject);
+      const client = new WebSocket("ws://localhost:1234", ["foo", "bar"]);
+      client.onerror = errorCallback;
+      client.onopen = resolve;
+    })
+  ).resolves.toHaveProperty("type", "open");
+
+  expect(selectProtocol).toHaveBeenCalledTimes(3);
+  expect(errorCallback).toHaveBeenCalledTimes(1);
+  expect(errorCallback).toHaveBeenCalledWith(
+    expect.objectContaining({
+      type: "error",
+    })
+  );
+
+  // ensure that the WebSocket mock set up by mock-socket is still present
+  expect(WebSocket).toBeDefined();
+});
+```
+
 ### Sending errors
 
 ```js
@@ -238,6 +324,10 @@ afterEach(() => {
   WS.clean();
 });
 ```
+
+## Known issues
+
+`mock-socket` has a strong usage of delays (`setTimeout` to be more specific). This means using `jest.useFakeTimers();` will cause issues such as the client appearing to never connect to the server.
 
 ## Testing React applications
 

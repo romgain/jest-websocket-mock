@@ -3,12 +3,11 @@ import Queue from "./queue";
 import act from "./act-compat";
 
 const identity = (x: string) => x;
-interface booleanFunction {
-  (): boolean;
-}
+
 interface WSOptions {
   jsonProtocol?: boolean;
-  verifyClient?: booleanFunction;
+  verifyClient?: () => boolean;
+  selectProtocol?: (protocols: string[]) => string;
 }
 export type DeserializedMessage<TMessage = object> = string | TMessage;
 
