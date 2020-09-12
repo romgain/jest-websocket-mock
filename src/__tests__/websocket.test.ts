@@ -119,6 +119,35 @@ describe("The WS helper", () => {
     );
   });
 
+  it("handles the verifyClient option", async () => {
+    const verifyClient = jest.fn();
+    verifyClient.mockReturnValueOnce(false).mockReturnValue(true);
+    const server = new WS("ws://localhost:1234", {
+      verifyClient: verifyClient
+    });
+    const client1 = new WebSocket("ws://localhost:1234");
+
+    const errorCallback = jest.fn();
+    client1.onerror = errorCallback;
+
+
+    new WebSocket("ws://localhost:1234"); /* Need something to wait on */
+    await server.connected;
+
+
+
+    expect(verifyClient).toHaveBeenCalledTimes(2);
+    expect(errorCallback).toHaveBeenCalledTimes(1);
+    expect(errorCallback).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: "error"
+      })
+    );
+
+    // ensure that the WebSocket mock set up by mock-socket is still present
+    expect(WebSocket).toBeDefined();
+  });
+
   it("closes the connection", async () => {
     const server = new WS("ws://localhost:1234");
     const client = new WebSocket("ws://localhost:1234");
