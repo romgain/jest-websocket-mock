@@ -119,6 +119,52 @@ describe("The WS helper", () => {
     );
   });
 
+  it("rejects connections that fail the verifyClient option", async () => {
+    const verifyClient = jest.fn().mockReturnValue(false);
+    new WS("ws://localhost:1234", { verifyClient: verifyClient });
+    const errorCallback = jest.fn();
+
+    await expect(
+      new Promise((resolve, reject) => {
+        errorCallback.mockImplementation(reject);
+        const client = new WebSocket("ws://localhost:1234");
+        client.onerror = errorCallback;
+        client.onopen = resolve;
+      })
+      // WebSocket onerror event gets called with an event of type error and not an error
+    ).rejects.toEqual(expect.objectContaining({ type: "error" }));
+
+    expect(verifyClient).toHaveBeenCalledTimes(1);
+    expect(errorCallback).toHaveBeenCalledTimes(1);
+
+    // ensure that the WebSocket mock set up by mock-socket is still present
+    expect(WebSocket).toBeDefined();
+  });
+
+  it("rejects connections that fail the selectProtocol option", async () => {
+    const selectProtocol = () => null;
+    new WS("ws://localhost:1234", { selectProtocol });
+    const errorCallback = jest.fn();
+
+    await expect(
+      new Promise((resolve, reject) => {
+        errorCallback.mockImplementationOnce(reject);
+        const client = new WebSocket("ws://localhost:1234", "foo");
+        client.onerror = errorCallback;
+        client.onopen = resolve;
+      })
+    ).rejects.toEqual(
+      // WebSocket onerror event gets called with an event of type error and not an error
+      expect.objectContaining({
+        type: "error",
+        currentTarget: expect.objectContaining({ protocol: "foo" }),
+      })
+    );
+
+    // ensure that the WebSocket mock set up by mock-socket is still present
+    expect(WebSocket).toBeDefined();
+  });
+
   it("closes the connection", async () => {
     const server = new WS("ws://localhost:1234");
     const client = new WebSocket("ws://localhost:1234");

@@ -59,14 +59,16 @@ server.close();
 WS.clean();
 ```
 
-The `WS` constructor also accepts an optional options object as second argument.
-The only supported option is `jsonProtocol: true`, to tell the mock websocket
-server to automatically serialize and deserialize JSON messages:
+The `WS` constructor also accepts an optional options object as second argument:
+
+- `jsonProtocol: true` can be used to automatically serialize and deserialize JSON messages:
 
 ```js
 const server = new WS("ws://localhost:1234", { jsonProtocol: true });
 server.send({ type: "GREETING", payload: "hello" });
 ```
+
+- The `mock-server` options `verifyClient` and `selectProtocol` are directly passed-through to the mock-server's constructor.
 
 ### Attributes of a `WS` instance
 
@@ -170,6 +172,58 @@ test("the mock server seamlessly handles JSON protocols", async () => {
 });
 ```
 
+### verifyClient server option
+
+A `verifyClient` function can be given in the options for the `jest-websocket-mock` constructor.
+This can be used to test behaviour for a client that connects to a WebSocket server it's blacklisted from for example.
+
+**Note** : _Currently `mock-socket`'s implementation does not send any parameters to this function (unlike the real `ws` implementation)._
+
+```js
+test("rejects connections that fail the verifyClient option", async () => {
+  new WS("ws://localhost:1234", { verifyClient: () => false });
+  const errorCallback = jest.fn();
+
+  await expect(
+    new Promise((resolve, reject) => {
+      errorCallback.mockImplementation(reject);
+      const client = new WebSocket("ws://localhost:1234");
+      client.onerror = errorCallback;
+      client.onopen = resolve;
+    })
+    // WebSocket onerror event gets called with an event of type error and not an error
+  ).rejects.toEqual(expect.objectContaining({ type: "error" }));
+});
+```
+
+### selectProtocol server option
+
+A `selectProtocol` function can be given in the options for the `jest-websocket-mock` constructor.
+This can be used to test behaviour for a client that connects to a WebSocket server using the wrong protocol.
+
+```js
+test("rejects connections that fail the selectProtocol option", async () => {
+  const selectProtocol = () => null;
+  new WS("ws://localhost:1234", { selectProtocol });
+  const errorCallback = jest.fn();
+
+  await expect(
+    new Promise((resolve, reject) => {
+      errorCallback.mockImplementationOnce(reject);
+      const client = new WebSocket("ws://localhost:1234", "foo");
+      client.onerror = errorCallback;
+      client.onopen = resolve;
+    })
+  ).rejects.toEqual(
+    // WebSocket onerror event gets called with an event of type error and not an error
+    expect.objectContaining({
+      type: "error",
+      currentTarget: expect.objectContaining({ protocol: "foo" }),
+    })
+  );
+});
+```
+
 ### Sending errors
 
 ```js
@@ -238,6 +292,10 @@ afterEach(() => {
   WS.clean();
 });
 ```
+
+## Known issues
+
+`mock-socket` has a strong usage of delays (`setTimeout` to be more specific). This means using `jest.useFakeTimers();` will cause issues such as the client appearing to never connect to the server.
 
 ## Testing React applications
 

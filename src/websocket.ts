@@ -1,9 +1,10 @@
-import { Server, WebSocket, CloseOptions } from "mock-socket";
+import { Server, WebSocket, ServerOptions, CloseOptions } from "mock-socket";
 import Queue from "./queue";
 import act from "./act-compat";
 
 const identity = (x: string) => x;
-interface WSOptions {
+
+interface WSOptions extends ServerOptions {
   jsonProtocol?: boolean;
 }
 export type DeserializedMessage<TMessage = object> = string | TMessage;
@@ -36,9 +37,10 @@ export default class WS {
     WS.instances = [];
   }
 
-  constructor(url: string, { jsonProtocol = false }: WSOptions = {}) {
+  constructor(url: string, opts: WSOptions = {}) {
     WS.instances.push(this);
 
+    const { jsonProtocol = false, ...serverOptions } = opts;
     this.serializer = jsonProtocol ? JSON.stringify : identity;
     this.deserializer = jsonProtocol ? JSON.parse : identity;
 
@@ -47,7 +49,7 @@ export default class WS {
     this._isConnected = new Promise((done) => (connectionResolver = done));
     this._isClosed = new Promise((done) => (closedResolver = done));
 
-    this.server = new Server(url);
+    this.server = new Server(url, serverOptions);
 
     this.server.on("close", closedResolver);
 
