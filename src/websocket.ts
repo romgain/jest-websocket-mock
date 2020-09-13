@@ -1,13 +1,11 @@
-import { Server, WebSocket, CloseOptions } from "mock-socket";
+import { Server, WebSocket, ServerOptions, CloseOptions } from "mock-socket";
 import Queue from "./queue";
 import act from "./act-compat";
 
 const identity = (x: string) => x;
 
-interface WSOptions {
+interface WSOptions extends ServerOptions {
   jsonProtocol?: boolean;
-  verifyClient?: () => boolean;
-  selectProtocol?: (protocols: string[]) => string;
 }
 export type DeserializedMessage<TMessage = object> = string | TMessage;
 
@@ -42,7 +40,7 @@ export default class WS {
   constructor(url: string, opts: WSOptions = {}) {
     WS.instances.push(this);
 
-    const { jsonProtocol, ...serverOptions } = opts;
+    const { jsonProtocol = false, ...serverOptions } = opts;
     this.serializer = jsonProtocol ? JSON.stringify : identity;
     this.deserializer = jsonProtocol ? JSON.parse : identity;
 

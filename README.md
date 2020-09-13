@@ -59,14 +59,16 @@ server.close();
 WS.clean();
 ```
 
-The `WS` constructor also accepts an optional options object as second argument.
-The only supported option is `jsonProtocol: true`, to tell the mock websocket
-server to automatically serialize and deserialize JSON messages:
+The `WS` constructor also accepts an optional options object as second argument:
+
+- `jsonProtocol: true` can be used to automatically serialize and deserialize JSON messages:
 
 ```js
 const server = new WS("ws://localhost:1234", { jsonProtocol: true });
 server.send({ type: "GREETING", payload: "hello" });
 ```
+
+- The `mock-server` options `verifyClient` and `selectProtocol` are directly passed-through to the mock-server's constructor.
 
 ### Attributes of a `WS` instance
 
@@ -175,12 +177,11 @@ test("the mock server seamlessly handles JSON protocols", async () => {
 A `verifyClient` function can be given in the options for the `jest-websocket-mock` constructor.
 This can be used to test behaviour for a client that connects to a WebSocket server it's blacklisted from for example.
 
-**Note** : _Currently `mock-socket`'s implementation does not send any parameters to this function (unlike the real `ws` implementation. This might be because the check is done in the constructor for a WebSocket client and not on the server side_
+**Note** : _Currently `mock-socket`'s implementation does not send any parameters to this function (unlike the real `ws` implementation)._
 
 ```js
-test("handles the verifyClient option", async () => {
-  const verifyClient = jest.fn().mockReturnValue(false);
-  new WS("ws://localhost:1234", { verifyClient: verifyClient });
+test("rejects connections that fail the verifyClient option", async () => {
+  new WS("ws://localhost:1234", { verifyClient: () => false });
   const errorCallback = jest.fn();
 
   await expect(
@@ -190,18 +191,8 @@ test("handles the verifyClient option", async () => {
       client.onerror = errorCallback;
       client.onopen = resolve;
     })
-  ).rejects.toHaveProperty("type", "error"); // WebSocket onerror event gets called with an event of type error and not an error
-
-  expect(verifyClient).toHaveBeenCalledTimes(1);
-  expect(errorCallback).toHaveBeenCalledTimes(1);
-  expect(errorCallback).toHaveBeenCalledWith(
-    expect.objectContaining({
-      type: "error",
-    })
-  );
-
-  // ensure that the WebSocket mock set up by mock-socket is still present
-  expect(WebSocket).toBeDefined();
+    // WebSocket onerror event gets called with an event of type error and not an error
+  ).rejects.toEqual(expect.objectContaining({ type: "error" }));
 });
 ```
 
@@ -211,9 +202,9 @@ A `selectProtocol` function can be given in the options for the `jest-websocket-
 This can be used to test behaviour for a client that connects to a WebSocket server using the wrong protocol.
 
 ```js
-test("handles the selectProtocol option", async () => {
-  const selectProtocol = jest.fn().mockReturnValue("bar");
-  new WS("ws://localhost:1234", { selectProtocol: selectProtocol });
+test("rejects connections that fail the selectProtocol option", async () => {
+  const selectProtocol = () => null;
+  new WS("ws://localhost:1234", { selectProtocol });
   const errorCallback = jest.fn();
 
   await expect(
@@ -223,36 +214,13 @@ test("handles the selectProtocol option", async () => {
       client.onerror = errorCallback;
       client.onopen = resolve;
     })
-  ).rejects.toHaveProperty("type", "error"); // WebSocket onerror event gets called with an event of type error and not an error
-
-  await expect(
-    new Promise((resolve, reject) => {
-      errorCallback.mockImplementationOnce(reject);
-      const client = new WebSocket("ws://localhost:1234", "bar");
-      client.onerror = errorCallback;
-      client.onopen = resolve;
-    })
-  ).resolves.toHaveProperty("type", "open");
-
-  await expect(
-    new Promise((resolve, reject) => {
-      errorCallback.mockImplementationOnce(reject);
-      const client = new WebSocket("ws://localhost:1234", ["foo", "bar"]);
-      client.onerror = errorCallback;
-      client.onopen = resolve;
-    })
-  ).resolves.toHaveProperty("type", "open");
-
-  expect(selectProtocol).toHaveBeenCalledTimes(3);
-  expect(errorCallback).toHaveBeenCalledTimes(1);
-  expect(errorCallback).toHaveBeenCalledWith(
+  ).rejects.toEqual(
+    // WebSocket onerror event gets called with an event of type error and not an error
     expect.objectContaining({
       type: "error",
+      currentTarget: expect.objectContaining({ protocol: "foo" }),
     })
   );
-
-  // ensure that the WebSocket mock set up by mock-socket is still present
-  expect(WebSocket).toBeDefined();
 });
 ```
 
