@@ -1,7 +1,7 @@
 export default class Queue<ItemT> {
   pendingItems: Array<ItemT> = [];
   nextItemResolver!: () => void;
-  nextItem: Promise<ItemT> = new Promise(
+  nextItem: Promise<void> = new Promise(
     (done) => (this.nextItemResolver = done)
   );
 

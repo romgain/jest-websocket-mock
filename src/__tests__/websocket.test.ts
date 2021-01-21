@@ -50,7 +50,7 @@ describe("The WS helper", () => {
 
     "abcdef".split("").forEach(client.send.bind(client));
 
-    let waitedEnough: () => void;
+    let waitedEnough: (value: void) => void;
     const waitABit = new Promise((done) => (waitedEnough = done));
 
     setTimeout(async () => {
