@@ -1,4 +1,4 @@
-import diff from "jest-diff";
+import { diff } from "jest-diff";
 import WS from "./websocket";
 import { DeserializedMessage } from "./websocket";
 
