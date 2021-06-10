@@ -62,5 +62,8 @@
   },
   "peerDependencies": {
     "mock-socket": "^8||^9"
+  },
+  "dependencies": {
+    "jest-diff": "^27.0.2"
   }
 }
