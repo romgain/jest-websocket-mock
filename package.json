@@ -18,7 +18,7 @@
     "prettier:apply": "prettier --write \"src/**/*.{ts,js}\" \"**/*.md\"",
     "type:check": "tsc --noEmit",
     "prepublishOnly": "npm run build",
-    "test": "jest"
+    "test": "jest --colors"
   },
   "keywords": [
     "jest",
