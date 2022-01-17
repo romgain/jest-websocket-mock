@@ -2,11 +2,16 @@ import { diff } from "jest-diff";
 import WS from "./websocket";
 import { DeserializedMessage } from "./websocket";
 
+type ReceiveMessageOptions = {
+  timeout?: number;
+};
+
 declare global {
   namespace jest {
     interface Matchers<R, T> {
       toReceiveMessage<TMessage = object>(
-        message: DeserializedMessage<TMessage>
+        message: DeserializedMessage<TMessage>,
+        options?: ReceiveMessageOptions
       ): Promise<R>;
       toHaveReceivedMessages<TMessage = object>(
         messages: Array<DeserializedMessage<TMessage>>
@@ -37,7 +42,11 @@ const makeInvalidWsMessage = function makeInvalidWsMessage(
 };
 
 expect.extend({
-  async toReceiveMessage(ws: WS, expected: DeserializedMessage) {
+  async toReceiveMessage(
+    ws: WS,
+    expected: DeserializedMessage,
+    options?: ReceiveMessageOptions
+  ) {
     const isWS = ws instanceof WS;
     if (!isWS) {
       return {
@@ -46,9 +55,11 @@ expect.extend({
       };
     }
 
+    const waitDelay = options?.timeout ?? WAIT_DELAY;
+
     const messageOrTimeout = await Promise.race([
       ws.nextMessage,
-      new Promise((resolve) => setTimeout(() => resolve(TIMEOUT), WAIT_DELAY)),
+      new Promise((resolve) => setTimeout(() => resolve(TIMEOUT), waitDelay)),
     ]);
 
     if (messageOrTimeout === TIMEOUT) {
@@ -62,7 +73,7 @@ expect.extend({
           ) +
           "\n\n" +
           `Expected the websocket server to receive a message,\n` +
-          `but it didn't receive anything in ${WAIT_DELAY}ms.`,
+          `but it didn't receive anything in ${waitDelay}ms.`,
       };
     }
     const received = messageOrTimeout;
