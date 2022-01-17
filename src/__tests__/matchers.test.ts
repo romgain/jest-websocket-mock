@@ -18,6 +18,14 @@ describe(".toReceiveMessage", () => {
     await expect(server).toReceiveMessage("hello there");
   });
 
+  it("passes when the websocket server receives the expected message with custom timeout", async () => {
+    setTimeout(() => {
+      client.send("hello there");
+    }, 2000);
+
+    await expect(server).toReceiveMessage("hello there", { timeout: 3000 });
+  });
+
   it("passes when the websocket server receives the expected JSON message", async () => {
     const jsonServer = new WS("ws://localhost:9876", { jsonProtocol: true });
     const jsonClient = new WebSocket("ws://localhost:9876");
@@ -46,6 +54,18 @@ Received: string
 
 Expected the websocket server to receive a message,
 but it didn't receive anything in 1000ms."
+`);
+  });
+
+  it("fails when the WS server does not receive the expected message with custom timeout", async () => {
+    expect.hasAssertions();
+    await expect(
+      expect(server).toReceiveMessage("hello there", { timeout: 3000 })
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`
+"[2mexpect([22m[31mWS[39m[2m).toReceiveMessage([22m[32mexpected[39m[2m)[22m
+
+Expected the websocket server to receive a message,
+but it didn't receive anything in 3000ms."
 `);
   });
 
