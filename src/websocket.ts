@@ -1,4 +1,4 @@
-import { Server, WebSocket, ServerOptions, CloseOptions } from "mock-socket";
+import { Server, ServerOptions, CloseOptions, Client } from "mock-socket";
 import Queue from "./queue";
 import act from "./act-compat";
 
@@ -13,7 +13,7 @@ export type DeserializedMessage<TMessage = object> = string | TMessage;
 // a WebSocket proxy that overrides the signature of the `close` method.
 // To work around this inconsistency, we need to override the WebSocket
 // interface. See https://github.com/romgain/jest-websocket-mock/issues/26#issuecomment-571579567
-interface MockWebSocket extends Omit<WebSocket, "close"> {
+interface MockWebSocket extends Omit<Client, "close"> {
   close(options?: CloseOptions): void;
 }
 
@@ -26,7 +26,7 @@ export default class WS {
   messages: Array<DeserializedMessage> = [];
   messagesToConsume = new Queue();
 
-  private _isConnected: Promise<WebSocket>;
+  private _isConnected: Promise<Client>;
   private _isClosed: Promise<{}>;
 
   static clean() {
@@ -44,8 +44,8 @@ export default class WS {
     this.serializer = jsonProtocol ? JSON.stringify : identity;
     this.deserializer = jsonProtocol ? JSON.parse : identity;
 
-    let connectionResolver: (socket: WebSocket) => void,
-      closedResolver!: (socket: WebSocket) => void;
+    let connectionResolver: (socket: Client) => void,
+      closedResolver!: (socket: Client) => void;
     this._isConnected = new Promise((done) => (connectionResolver = done));
     this._isClosed = new Promise((done) => (closedResolver = done));
 
@@ -53,7 +53,7 @@ export default class WS {
 
     this.server.on("close", closedResolver);
 
-    this.server.on("connection", (socket: WebSocket) => {
+    this.server.on("connection", (socket: Client) => {
       connectionResolver(socket);
 
       socket.on("message", (message) => {
@@ -65,8 +65,8 @@ export default class WS {
   }
 
   get connected() {
-    let resolve: (socket: WebSocket) => void;
-    const connectedPromise = new Promise<WebSocket>((done) => (resolve = done));
+    let resolve: (socket: Client) => void;
+    const connectedPromise = new Promise<Client>((done) => (resolve = done));
     const waitForConnected = async () => {
       await act(async () => {
         await this._isConnected;

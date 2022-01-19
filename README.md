@@ -17,11 +17,8 @@ In particular:
 
 ## Install
 
-[Mock Socket](https://github.com/thoov/mock-socket) is a peer dependency and
-needs to be installed alongside `jest-websocket-mock`:
-
 ```bash
-npm install --save-dev jest-websocket-mock mock-socket
+npm install --save-dev jest-websocket-mock
 ```
 
 ## Mock a websocket server
