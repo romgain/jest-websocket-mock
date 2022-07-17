@@ -115,10 +115,10 @@ export default class WS {
     });
   }
 
-  error() {
+  error(options?: CloseOptions) {
     act(() => {
       this.server.emit("error", null);
     });
-    this.server.close();
+    this.server.close(options);
   }
 }
