@@ -60,7 +60,7 @@
     "typescript": "^4.0.2"
   },
   "dependencies": {
-    "jest-diff": "^28.0.2",
+    "jest-diff": "^29.2.0",
     "mock-socket": "^9.1.0"
   }
 }
