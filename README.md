@@ -294,6 +294,17 @@ afterEach(() => {
 
 `mock-socket` has a strong usage of delays (`setTimeout` to be more specific). This means using `jest.useFakeTimers();` will cause issues such as the client appearing to never connect to the server.
 
+While running the websocket server from tests within the jest-dom environment (as opposed to node)
+you may see errors of the nature:
+
+```bash
+ ReferenceError: setImmediate is not defined
+```
+
+You can work around this by installing the setImmediate shim from
+[https://github.com/YuzuJS/setImmediate](https://github.com/YuzuJS/setImmediate) and
+adding `require('setimmediate');` to your `setupTests.js`.
+
 ## Testing React applications
 
 When testing React applications, `jest-websocket-mock` will look for
