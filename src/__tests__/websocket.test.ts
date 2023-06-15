@@ -1,6 +1,9 @@
 /**
  * @copyright Romain Bertrand 2018
+ * @copyright Akiomi Kamakura 2023
  */
+
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import WS from "../websocket";
 
@@ -124,9 +127,9 @@ describe("The WS helper", () => {
   });
 
   it("rejects connections that fail the verifyClient option", async () => {
-    const verifyClient = jest.fn().mockReturnValue(false);
+    const verifyClient = vi.fn().mockReturnValue(false);
     new WS("ws://localhost:1234", { verifyClient: verifyClient });
-    const errorCallback = jest.fn();
+    const errorCallback = vi.fn();
 
     await expect(
       new Promise((resolve, reject) => {
@@ -148,7 +151,7 @@ describe("The WS helper", () => {
   it("rejects connections that fail the selectProtocol option", async () => {
     const selectProtocol = () => null;
     new WS("ws://localhost:1234", { selectProtocol });
-    const errorCallback = jest.fn();
+    const errorCallback = vi.fn();
 
     await expect(
       new Promise((resolve, reject) => {
@@ -172,7 +175,7 @@ describe("The WS helper", () => {
   it("closes the connection", async () => {
     const server = new WS("ws://localhost:1234");
     const client = new WebSocket("ws://localhost:1234");
-    const closeCallback = jest.fn();
+    const closeCallback = vi.fn();
     await server.connected;
 
     client.onclose = closeCallback;
@@ -198,7 +201,7 @@ describe("The WS helper", () => {
   it("closes the connection with a custom close code", async () => {
     const server = new WS("ws://localhost:1234");
     const client = new WebSocket("ws://localhost:1234");
-    const closeCallback = jest.fn();
+    const closeCallback = vi.fn();
     await server.connected;
     client.onclose = closeCallback;
 
@@ -308,7 +311,7 @@ describe("The WS helper", () => {
   it("passes on close options on server error event", async () => {
     const server = new WS("ws://localhost:1234");
     const client = new WebSocket("ws://localhost:1234");
-    const closeCallback = jest.fn();
+    const closeCallback = vi.fn();
     await server.connected;
     client.onclose = closeCallback;
 

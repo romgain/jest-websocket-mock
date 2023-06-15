@@ -1,6 +1,9 @@
 /**
  * @copyright Romain Bertrand 2018
+ * @copyright Akiomi Kamakura 2023
  */
+
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import WS from "../websocket";
 import "../matchers";
@@ -95,6 +98,7 @@ Difference:
 `);
   });
 
+  // TODO: Fix Object indentation
   it("fails when expecting a JSON message but the server is not configured for JSON protocols", async () => {
     expect.hasAssertions();
     client.send(`{"answer":42}`);
@@ -103,9 +107,11 @@ Difference:
 "[2mexpect([22m[31mWS[39m[2m).toReceiveMessage([22m[32mexpected[39m[2m)[22m
 
 Expected the next received message to equal:
-  [32m{\\"answer\\": 42}[39m
+  [32mObject {
+  \\"answer\\": 42,
+}[39m
 Received:
-  [31m\\"{\\\\\\"answer\\\\\\":42}\\"[39m
+  [31m\\"{\\"answer\\":42}\\"[39m
 
 Difference:
 
@@ -185,6 +191,7 @@ describe(".toHaveReceivedMessages", () => {
     ]);
   });
 
+  // TODO: Fix Array indentation
   it("fails when the websocket server did not receive the expected messages", async () => {
     client.send("hello there");
     client.send("how are you?");
@@ -198,9 +205,16 @@ describe(".toHaveReceivedMessages", () => {
 "[2mexpect([22m[31mWS[39m[2m).toHaveReceivedMessages([22m[32mexpected[39m[2m)[22m
 
 Expected the WS server to have received the following messages:
-  [32m[\\"hello there\\", \\"'sup?\\"][39m
+  [32mArray [
+  \\"hello there\\",
+  \\"'sup?\\",
+][39m
 Received:
-  [31m[\\"hello there\\", \\"how are you?\\", \\"good?\\"][39m
+  [31mArray [
+  \\"hello there\\",
+  \\"how are you?\\",
+  \\"good?\\",
+][39m
 
 "
 `);
@@ -247,9 +261,17 @@ describe(".not.toHaveReceivedMessages", () => {
 "[2mexpect([22m[31mWS[39m[2m).not.toHaveReceivedMessages([22m[32mexpected[39m[2m)[22m
 
 Expected the WS server to not have received the following messages:
-  [32m[\\"'sup?\\", \\"U good?\\", \\"hello there\\"][39m
+  [32mArray [
+  \\"'sup?\\",
+  \\"U good?\\",
+  \\"hello there\\",
+][39m
 But it received:
-  [31m[\\"hello there\\", \\"how are you?\\", \\"good?\\"][39m"
+  [31mArray [
+  \\"hello there\\",
+  \\"how are you?\\",
+  \\"good?\\",
+][39m"
 `);
   });
 

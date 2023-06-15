@@ -1,15 +1,34 @@
 /**
  * @copyright Romain Bertrand 2018
+ * @copyright Akiomi Kamakura 2023
  */
 
 import { diff } from "jest-diff";
+import { expect } from "vitest";
+
 import WS from "./websocket";
 import { DeserializedMessage } from "./websocket";
 
-type ReceiveMessageOptions = {
+export type ReceiveMessageOptions = {
   timeout?: number;
 };
 
+interface CustomMatchers<R = unknown> {
+  toReceiveMessage<TMessage = object>(
+    message: DeserializedMessage<TMessage>,
+    options?: ReceiveMessageOptions
+  ): Promise<R>;
+  toHaveReceivedMessages<TMessage = object>(
+    messages: Array<DeserializedMessage<TMessage>>
+  ): R;
+}
+
+declare module "vitest" {
+  interface Assertion<T = any> extends CustomMatchers<T> {}
+  interface AsymmetricMatchersContaining extends CustomMatchers {}
+}
+
+// TODO: Fix type definitions
 declare global {
   namespace jest {
     interface Matchers<R, T> {
@@ -27,7 +46,9 @@ declare global {
 const WAIT_DELAY = 1000;
 const TIMEOUT = Symbol("timoeut");
 
+// TODO: Don't use @ts-ignore
 const makeInvalidWsMessage = function makeInvalidWsMessage(
+  // @ts-ignore
   this: jest.MatcherUtils,
   ws: WS,
   matcher: string
