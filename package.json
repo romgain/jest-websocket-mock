@@ -1,11 +1,11 @@
 {
-  "name": "jest-websocket-mock",
-  "version": "2.4.0",
+  "name": "vitest-websocket-mock",
+  "version": "0.0.0",
   "description": "Mock websockets and assert complex websocket interactions with Jest",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/romgain/jest-websocket-mock.git"
+    "url": "git+https://github.com/akiomik/vitest-websocket-mock.git"
   },
   "types": "dist/index.d.ts",
   "exports": {
@@ -26,7 +26,7 @@
     "test:watch": "vitest"
   },
   "keywords": [
-    "jest",
+    "vitest",
     "websocket",
     "mock",
     "unit-testing"
