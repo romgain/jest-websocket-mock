@@ -1,26 +1,15 @@
 {
   "compilerOptions": {
-    "target": "es2015",
-    "module": "commonjs",
-    "lib": ["es2015", "dom"],
-    "declaration": true,
-
+    "target": "esnext",
+    "module": "esnext",
+		"moduleResolution": "node",
+    "lib": ["esnext", "dom"],
     "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "strictBindCallApply": true,
-    "strictPropertyInitialization": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-
     "esModuleInterop": true,
-    "listEmittedFiles": true
+		"ignoreDeprecations": "5.0",
+    "isolatedModules": true,
+    "declaration": true,
+    "declarationMap": true
   },
-  "include": ["src"]
+  "include": ["src/**/*.ts"]
 }
