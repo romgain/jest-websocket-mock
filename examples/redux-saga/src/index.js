@@ -1,3 +1,7 @@
+/**
+ * @copyright Romain Bertrand 2018
+ */
+
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";

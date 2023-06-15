@@ -1,3 +1,7 @@
+/**
+ * @copyright Romain Bertrand 2018
+ */
+
 import React from "react";
 import ConnectionIndicator from "./ConnectionIndicator";
 import Messages from "./Messages";

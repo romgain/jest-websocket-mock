@@ -1,3 +1,7 @@
+/**
+ * @copyright Romain Bertrand 2018
+ */
+
 import { Server, ServerOptions, CloseOptions, Client } from "mock-socket";
 import Queue from "./queue";
 import act from "./act-compat";

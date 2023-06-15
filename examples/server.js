@@ -1,4 +1,6 @@
 /**
+ * @copyright Romain Bertrand 2018
+ *
  * This is a simple example server, mostly here for demonstration
  * purposes.
  * The subfolders in this directory contain actual client code with

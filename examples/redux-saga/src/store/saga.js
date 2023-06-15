@@ -1,3 +1,7 @@
+/**
+ * @copyright Romain Bertrand 2018
+ */
+
 import { eventChannel, END } from "redux-saga";
 import { cancel, call, delay, fork, put, take } from "redux-saga/effects";
 import { actions } from "./reducer";

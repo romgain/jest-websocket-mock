@@ -1,3 +1,7 @@
+/**
+ * @copyright Romain Bertrand 2018
+ */
+
 export default class Queue<ItemT> {
   pendingItems: Array<ItemT> = [];
   nextItemResolver!: () => void;

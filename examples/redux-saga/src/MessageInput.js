@@ -1,3 +1,7 @@
+/**
+ * @copyright Romain Bertrand 2018
+ */
+
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import { actions } from "./store/reducer";

@@ -1,3 +1,7 @@
+/**
+ * @copyright Romain Bertrand 2018
+ */
+
 import WS from "../websocket";
 
 describe("The WS helper", () => {

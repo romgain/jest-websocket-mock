@@ -1,3 +1,7 @@
+/**
+ * @copyright Romain Bertrand 2018
+ */
+
 import ReactDOM from "react-dom";
 import "..";
 

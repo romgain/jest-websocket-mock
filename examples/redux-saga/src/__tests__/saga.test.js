@@ -1,3 +1,7 @@
+/**
+ * @copyright Romain Bertrand 2018
+ */
+
 import WS from "jest-websocket-mock";
 import makeStore from "../store";
 import { actions } from "../store/reducer";

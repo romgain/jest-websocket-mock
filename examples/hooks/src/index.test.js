@@ -1,3 +1,7 @@
+/**
+ * @copyright Romain Bertrand 2018
+ */
+
 const { act } = require("react-dom/test-utils");
 
 describe("The index", () => {

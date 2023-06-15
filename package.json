@@ -26,7 +26,7 @@
     "mock",
     "unit-testing"
   ],
-  "author": "Romain Bertrand",
+  "author": "Akiomi Kamakura",
   "license": "MIT",
   "jest": {
     "roots": [

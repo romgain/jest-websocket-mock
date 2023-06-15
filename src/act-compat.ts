@@ -1,4 +1,6 @@
 /**
+ * @copyright Romain Bertrand 2018
+ *
  * A simple compatibility method for react's "act".
  * If @testing-library/react is already installed, we just use
  * their implementation - it's complete and has useful warnings.

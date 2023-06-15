@@ -1,3 +1,7 @@
+/**
+ * @copyright Romain Bertrand 2018
+ */
+
 import React from "react";
 import { render, screen, userEvent, fireEvent } from "../test-utils";
 import App from "../App";
