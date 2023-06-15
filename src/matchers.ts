@@ -29,20 +29,6 @@ declare module 'vitest' {
   interface AsymmetricMatchersContaining extends CustomMatchers {}
 }
 
-// TODO: Fix type definitions
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace jest {
-    interface Matchers<R> {
-      toReceiveMessage<TMessage = object>(
-        message: DeserializedMessage<TMessage>,
-        options?: ReceiveMessageOptions
-      ): Promise<R>;
-      toHaveReceivedMessages<TMessage = object>(messages: Array<DeserializedMessage<TMessage>>): R;
-    }
-  }
-}
-
 const WAIT_DELAY = 1000;
 const TIMEOUT = Symbol('timoeut');
 
