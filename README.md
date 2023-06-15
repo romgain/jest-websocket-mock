@@ -1,36 +1,35 @@
-# Jest websocket mock
+# Vitest websocket mock
 
-[![npm version](https://badge.fury.io/js/jest-websocket-mock.svg)](https://badge.fury.io/js/jest-websocket-mock)
-[![Build Status](https://github.com/romgain/jest-websocket-mock/actions/workflows/ci.yml/badge.svg)](https://github.com/romgain/jest-websocket-mock/actions)
-[![Coverage report](https://codecov.io/gh/romgain/jest-websocket-mock/branch/master/graph/badge.svg)](https://codecov.io/gh/romgain/jest-websocket-mock)
-[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+[![npm version](https://badge.fury.io/js/vitest-websocket-mock.svg)](https://badge.fury.io/js/vitest-websocket-mock)
+[![Build Status](https://github.com/akiomik/vitest-websocket-mock/actions/workflows/ci.yml/badge.svg)](https://github.com/akiomik/vitest-websocket-mock/actions)
+[![Coverage report](https://codecov.io/gh/akiomik/vitest-websocket-mock/branch/main/graph/badge.svg)](https://codecov.io/gh/akiomik/vitest-websocket-mock)
 
-A set of utilities and Jest matchers to help testing complex websocket interactions.
+A set of utilities and Vitest matchers to help testing complex websocket interactions.
 
 **Examples:**
-Several examples are provided in the [examples folder](https://github.com/romgain/jest-websocket-mock/blob/master/examples/).
+Several examples are provided in the [examples folder](https://github.com/akiomik/vitest-websocket-mock/blob/main/examples/).
 In particular:
 
-- [testing a redux saga that manages a websocket connection](https://github.com/romgain/jest-websocket-mock/blob/master/examples/redux-saga/src/__tests__/saga.test.js)
-- [testing a component using the saga above](https://github.com/romgain/jest-websocket-mock/blob/master/examples/redux-saga/src/__tests__/App.test.js)
-- [testing a component that manages a websocket connection using react hooks](https://github.com/romgain/jest-websocket-mock/blob/master/examples/hooks/src/App.test.tsx)
+- [testing a redux saga that manages a websocket connection](https://github.com/akiomik/vitest-websocket-mock/blob/main/examples/redux-saga/src/__tests__/saga.test.js)
+- [testing a component using the saga above](https://github.com/akiomik/vitest-websocket-mock/blob/main/examples/redux-saga/src/__tests__/App.test.js)
+- [testing a component that manages a websocket connection using react hooks](https://github.com/akiomik/vitest-websocket-mock/blob/main/examples/hooks/src/App.test.tsx)
 
 ## Install
 
 ```bash
-npm install --save-dev jest-websocket-mock
+npm install -D vitest-websocket-mock
 ```
 
 ## Mock a websocket server
 
 ### The `WS` constructor
 
-`jest-websocket-mock` exposes a `WS` class that can instantiate mock websocket
+`vitest-websocket-mock` exposes a `WS` class that can instantiate mock websocket
 servers that keep track of the messages they receive, and in turn
 can send messages to connected clients.
 
 ```js
-import WS from 'jest-websocket-mock';
+import WS from 'vitest-websocket-mock';
 
 // create a WS instance, listening on port 1234 on localhost
 const server = new WS('ws://localhost:1234');
@@ -93,7 +92,7 @@ A `WS` instance has the following attributes:
 
 ## Run assertions on received messages
 
-`jest-websocket-mock` registers custom jest matchers to make assertions
+`vitest-websocket-mock` registers custom vitest matchers to make assertions
 on received messages easier:
 
 - `.toReceiveMessage`: async matcher that waits for the next message received
@@ -144,7 +143,7 @@ test('the mock server sends messages to connected clients', async () => {
 
 ### JSON protocols support
 
-`jest-websocket-mock` can also automatically serialize and deserialize
+`vitest-websocket-mock` can also automatically serialize and deserialize
 JSON messages:
 
 ```js
@@ -169,7 +168,7 @@ test('the mock server seamlessly handles JSON protocols', async () => {
 
 ### verifyClient server option
 
-A `verifyClient` function can be given in the options for the `jest-websocket-mock` constructor.
+A `verifyClient` function can be given in the options for the `vitest-websocket-mock` constructor.
 This can be used to test behaviour for a client that connects to a WebSocket server it's blacklisted from for example.
 
 **Note** : _Currently `mock-socket`'s implementation does not send any parameters to this function (unlike the real `ws` implementation)._
@@ -177,7 +176,7 @@ This can be used to test behaviour for a client that connects to a WebSocket ser
 ```js
 test('rejects connections that fail the verifyClient option', async () => {
   new WS('ws://localhost:1234', { verifyClient: () => false });
-  const errorCallback = jest.fn();
+  const errorCallback = vitest.fn();
 
   await expect(
     new Promise((resolve, reject) => {
@@ -193,14 +192,14 @@ test('rejects connections that fail the verifyClient option', async () => {
 
 ### selectProtocol server option
 
-A `selectProtocol` function can be given in the options for the `jest-websocket-mock` constructor.
+A `selectProtocol` function can be given in the options for the `vitest-websocket-mock` constructor.
 This can be used to test behaviour for a client that connects to a WebSocket server using the wrong protocol.
 
 ```js
 test('rejects connections that fail the selectProtocol option', async () => {
   const selectProtocol = () => null;
   new WS('ws://localhost:1234', { selectProtocol });
-  const errorCallback = jest.fn();
+  const errorCallback = vitest.fn();
 
   await expect(
     new Promise((resolve, reject) => {
@@ -290,9 +289,9 @@ afterEach(() => {
 
 ## Known issues
 
-`mock-socket` has a strong usage of delays (`setTimeout` to be more specific). This means using `jest.useFakeTimers();` will cause issues such as the client appearing to never connect to the server.
+`mock-socket` has a strong usage of delays (`setTimeout` to be more specific). This means using `vitest.useFakeTimers();` will cause issues such as the client appearing to never connect to the server.
 
-While running the websocket server from tests within the jest-dom environment (as opposed to node)
+While running the websocket server from tests within the vitest-dom environment (as opposed to node)
 you may see errors of the nature:
 
 ```bash
@@ -305,16 +304,16 @@ adding `require('setimmediate');` to your `setupTests.js`.
 
 ## Testing React applications
 
-When testing React applications, `jest-websocket-mock` will look for
+When testing React applications, `vitest-websocket-mock` will look for
 `@testing-library/react`'s implementation of [`act`](https://reactjs.org/docs/test-utils.html#act).
 If it is available, it will wrap all the necessary calls in `act`, so you don't have to.
 
 If `@testing-library/react` is not available, we will assume that you're not testing a React application,
 and you might need to call `act` manually.
 
-## Using `jest-websocket-mock` to interact with a non-global WebSocket object
+## Using `vitest-websocket-mock` to interact with a non-global WebSocket object
 
-`jest-websocket-mock` uses [Mock Socket](https://github.com/thoov/mock-socket)
+`vitest-websocket-mock` uses [Mock Socket](https://github.com/thoov/mock-socket)
 under the hood to mock out WebSocket clients.
 Out of the box, Mock Socket will only mock out the global `WebSocket` object.
 If you are using a third-party WebSocket client library (eg. a Node.js
@@ -334,17 +333,13 @@ export { WebSocket as default } from 'mock-socket';
 ```
 
 **NOTE** The `ws` library is not 100% compatible with the browser API, and
-the `mock-socket` library that `jest-websocket-mock` uses under the hood only
+the `mock-socket` library that `vitest-websocket-mock` uses under the hood only
 implements the browser API.
-As a result, `jest-websocket-mock` will only work with the `ws` library if you
+As a result, `vitest-websocket-mock` will only work with the `ws` library if you
 restrict yourself to the browser APIs!
 
 ## Examples
 
 For a real life example, see the
-[examples directory](https://github.com/romgain/jest-websocket-mock/tree/master/examples),
+[examples directory](https://github.com/akiomik/vitest-websocket-mock/tree/main/examples),
 and in particular the saga tests.
-
-## Contributing
-
-See the [contributing guide](https://github.com/romgain/jest-websocket-mock/tree/master/CONTRIBUTING.md).
