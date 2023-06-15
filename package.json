@@ -8,9 +8,11 @@
     "url": "git+https://github.com/akiomik/vitest-websocket-mock.git"
   },
   "types": "dist/index.d.ts",
+  "module": "dist/index.es.js",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts"
+      "import": "dist/index.es.js",
+      "types": "dist/index.d.ts"
     }
   },
   "scripts": {
