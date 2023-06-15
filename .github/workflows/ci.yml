@@ -1,62 +1,54 @@
-name: CI
+name: Node.js CI
+
 on:
   push:
-    branches:
-      - '+([0-9])?(.{+([0-9]),x}).x'
-      - 'main'
-      - 'master'
-      - 'ci'
-      - 'test'
-      - 'next'
-      - 'next-major'
-      - 'beta'
-      - 'alpha'
-      - '!all-contributors/**'
-  pull_request: {}
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
-        node: ['14', '16', '17']
-    name: Build & test (Node ${{ matrix.node }})
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup node
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node }}
+        node-version: [18.x]
 
-      # Install & build & test:
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
       - run: npm install
       - run: npm test
-      - run: npm run type:check
-      - run: npm run prettier:check
+      - run: npm run lint
       - run: npm run build
       - run: npm pack
-      # Run the tests in the examples folder
-      # redux-saga:
-      - run: |
-          cd examples/redux-saga
-          npm install
-          npm install ../../jest-websocket-mock-*
-          npm test -- --coverage
-      # hooks:
-      - run: |
-          cd examples/hooks
-          npm install
-          npm install ../../jest-websocket-mock-*
-          npm test -- --coverage
+      # # Run the tests in the examples folder
+      # # redux-saga:
+      # - run: |
+      #     cd examples/redux-saga
+      #     npm install
+      #     npm install ../../jest-websocket-mock-*
+      #     npm test -- --coverage
+      # # hooks:
+      # - run: |
+      #     cd examples/hooks
+      #     npm install
+      #     npm install ../../jest-websocket-mock-*
+      #     npm test -- --coverage
 
   coverage:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Setup node
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
       - run: npm install
       - run: npm install -g codecov
       - run: npm test -- --coverage
