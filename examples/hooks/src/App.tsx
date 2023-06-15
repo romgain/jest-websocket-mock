@@ -2,24 +2,16 @@
  * @copyright Romain Bertrand 2018
  */
 
-import React, {
-  useState,
-  ChangeEvent,
-  FormEvent,
-  useEffect,
-  useRef,
-} from "react";
+import React, { useState, ChangeEvent, FormEvent, useEffect, useRef } from 'react';
 
-type MessageProps = { text: string; side: "sent" | "received" };
-const Message = ({ text, side }: MessageProps) => (
-  <div>{`(${side}) ${text}`}</div>
-);
+type MessageProps = { text: string; side: 'sent' | 'received' };
+const Message = ({ text, side }: MessageProps) => <div>{`(${side}) ${text}`}</div>;
 
 function App() {
   const wsRef = useRef<WebSocket>();
   const [connected, setConnected] = useState(false);
   const [messages, setMessages] = useState<MessageProps[]>([]);
-  const [currentMessage, setCurrentMessage] = useState("");
+  const [currentMessage, setCurrentMessage] = useState('');
 
   useEffect(() => {
     const ws = new WebSocket(`ws://${window.location.hostname}:8080`);
@@ -27,18 +19,16 @@ function App() {
       setConnected(true);
     };
     ws.onclose = () => setConnected(false);
-    ws.onmessage = (event) =>
-      setMessages((m) => [{ side: "received", text: event.data }, ...m]);
+    ws.onmessage = (event) => setMessages((m) => [{ side: 'received', text: event.data }, ...m]);
     wsRef.current = ws;
   }, []);
 
-  const onChange = (event: ChangeEvent<HTMLInputElement>) =>
-    setCurrentMessage(event.target.value);
+  const onChange = (event: ChangeEvent<HTMLInputElement>) => setCurrentMessage(event.target.value);
   const send = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     wsRef.current!.send(currentMessage);
-    setCurrentMessage("");
-    setMessages((m) => [{ side: "sent", text: currentMessage }, ...m]);
+    setCurrentMessage('');
+    setMessages((m) => [{ side: 'sent', text: currentMessage }, ...m]);
   };
 
   return (
@@ -46,10 +36,10 @@ function App() {
       <div
         className={
           connected
-            ? "ConnectionIndicator ConnectionIndicator--connected"
-            : "ConnectionIndicator ConnectionIndicator--disconnected"
+            ? 'ConnectionIndicator ConnectionIndicator--connected'
+            : 'ConnectionIndicator ConnectionIndicator--disconnected'
         }
-        title={connected ? "connected" : "disconnected"}
+        title={connected ? 'connected' : 'disconnected'}
       />
 
       <div className="Messages">

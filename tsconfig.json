@@ -2,11 +2,11 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
-		"moduleResolution": "node",
+    "moduleResolution": "node",
     "lib": ["esnext", "dom"],
     "strict": true,
     "esModuleInterop": true,
-		"ignoreDeprecations": "5.0",
+    "ignoreDeprecations": "5.0",
     "isolatedModules": true,
     "declaration": true,
     "declarationMap": true

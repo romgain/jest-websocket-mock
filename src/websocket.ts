@@ -2,9 +2,9 @@
  * @copyright Romain Bertrand 2018
  */
 
-import { Server, ServerOptions, CloseOptions, Client } from "mock-socket";
-import Queue from "./queue";
-import act from "./act-compat";
+import { Server, ServerOptions, CloseOptions, Client } from 'mock-socket';
+import Queue from './queue';
+import act from './act-compat';
 
 const identity = (x: string) => x;
 
@@ -17,7 +17,7 @@ export type DeserializedMessage<TMessage = object> = string | TMessage;
 // a WebSocket proxy that overrides the signature of the `close` method.
 // To work around this inconsistency, we need to override the WebSocket
 // interface. See https://github.com/romgain/jest-websocket-mock/issues/26#issuecomment-571579567
-interface MockWebSocket extends Omit<Client, "close"> {
+interface MockWebSocket extends Omit<Client, 'close'> {
   close(options?: CloseOptions): void;
 }
 
@@ -48,19 +48,18 @@ export default class WS {
     this.serializer = jsonProtocol ? JSON.stringify : identity;
     this.deserializer = jsonProtocol ? JSON.parse : identity;
 
-    let connectionResolver: (socket: Client) => void,
-      closedResolver!: (socket: Client) => void;
+    let connectionResolver: (socket: Client) => void, closedResolver!: (socket: Client) => void;
     this._isConnected = new Promise((done) => (connectionResolver = done));
     this._isClosed = new Promise((done) => (closedResolver = done));
 
     this.server = new Server(url, serverOptions);
 
-    this.server.on("close", closedResolver);
+    this.server.on('close', closedResolver);
 
-    this.server.on("connection", (socket: Client) => {
+    this.server.on('connection', (socket: Client) => {
       connectionResolver(socket);
 
-      socket.on("message", (message) => {
+      socket.on('message', (message) => {
         const parsedMessage = this.deserializer(message as string);
         this.messages.push(parsedMessage);
         this.messagesToConsume.put(parsedMessage);
@@ -100,7 +99,7 @@ export default class WS {
   }
 
   on(
-    eventName: "connection" | "message" | "close",
+    eventName: 'connection' | 'message' | 'close',
     callback: (socket: MockWebSocket) => void
   ): void {
     // @ts-ignore https://github.com/romgain/jest-websocket-mock/issues/26#issuecomment-571579567
@@ -109,7 +108,7 @@ export default class WS {
 
   send(message: DeserializedMessage) {
     act(() => {
-      this.server.emit("message", this.serializer(message));
+      this.server.emit('message', this.serializer(message));
     });
   }
 
@@ -121,7 +120,7 @@ export default class WS {
 
   error(options?: CloseOptions) {
     act(() => {
-      this.server.emit("error", null);
+      this.server.emit('error', null);
     });
     this.server.close(options);
   }

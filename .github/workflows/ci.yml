@@ -2,23 +2,23 @@ name: CI
 on:
   push:
     branches:
-      - "+([0-9])?(.{+([0-9]),x}).x"
-      - "main"
-      - "master"
-      - "ci"
-      - "test"
-      - "next"
-      - "next-major"
-      - "beta"
-      - "alpha"
-      - "!all-contributors/**"
+      - '+([0-9])?(.{+([0-9]),x}).x'
+      - 'main'
+      - 'master'
+      - 'ci'
+      - 'test'
+      - 'next'
+      - 'next-major'
+      - 'beta'
+      - 'alpha'
+      - '!all-contributors/**'
   pull_request: {}
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ["14", "16", "17"]
+        node: ['14', '16', '17']
     name: Build & test (Node ${{ matrix.node }})
     steps:
       - uses: actions/checkout@v2

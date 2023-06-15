@@ -2,19 +2,19 @@
  * @copyright Romain Bertrand 2018
  */
 
-import React, { PureComponent } from "react";
-import { connect } from "react-redux";
-import { actions } from "./store/reducer";
+import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
+import { actions } from './store/reducer';
 
 class MessageInput extends PureComponent {
-  state = { message: "" };
+  state = { message: '' };
 
-  onChange = event => this.setState({ message: event.target.value });
+  onChange = (event) => this.setState({ message: event.target.value });
 
-  onSubmit = event => {
+  onSubmit = (event) => {
     event.preventDefault();
     this.props.send(this.state.message);
-    this.setState({ message: "" });
+    this.setState({ message: '' });
   };
 
   render() {
@@ -33,7 +33,4 @@ class MessageInput extends PureComponent {
   }
 }
 
-export default connect(
-  null,
-  { send: actions.send }
-)(MessageInput);
+export default connect(null, { send: actions.send })(MessageInput);

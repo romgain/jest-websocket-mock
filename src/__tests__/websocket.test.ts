@@ -3,45 +3,45 @@
  * @copyright Akiomi Kamakura 2023
  */
 
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import WS from "../websocket";
+import WS from '../websocket';
 
-describe("The WS helper", () => {
+describe('The WS helper', () => {
   afterEach(() => {
     WS.clean();
   });
 
-  it("keeps track of received messages, and yields them as they come in", async () => {
-    const server = new WS("ws://localhost:1234");
-    const client = new WebSocket("ws://localhost:1234");
+  it('keeps track of received messages, and yields them as they come in', async () => {
+    const server = new WS('ws://localhost:1234');
+    const client = new WebSocket('ws://localhost:1234');
 
     await server.connected;
-    client.send("hello");
+    client.send('hello');
     const message = await server.nextMessage;
-    expect(message).toBe("hello");
-    expect(server.messages).toEqual(["hello"]);
+    expect(message).toBe('hello');
+    expect(server.messages).toEqual(['hello']);
   });
 
   it("cleans up connected clients and messages on 'clean'", async () => {
-    const server = new WS("ws://localhost:1234");
-    const client1 = new WebSocket("ws://localhost:1234");
+    const server = new WS('ws://localhost:1234');
+    const client1 = new WebSocket('ws://localhost:1234');
     await server.connected;
-    const client2 = new WebSocket("ws://localhost:1234");
+    const client2 = new WebSocket('ws://localhost:1234');
     await server.connected;
 
     const connections = { client1: true, client2: true };
-    const onclose = (name: "client1" | "client2") => () => {
+    const onclose = (name: 'client1' | 'client2') => () => {
       connections[name] = false;
     };
-    client1.onclose = onclose("client1");
-    client2.onclose = onclose("client2");
+    client1.onclose = onclose('client1');
+    client2.onclose = onclose('client2');
 
-    client1.send("hello 1");
+    client1.send('hello 1');
     await server.nextMessage;
-    client2.send("hello 2");
+    client2.send('hello 2');
     await server.nextMessage;
-    expect(server.messages).toEqual(["hello 1", "hello 2"]);
+    expect(server.messages).toEqual(['hello 1', 'hello 2']);
 
     WS.clean();
     expect(WS.instances).toEqual([]);
@@ -49,13 +49,13 @@ describe("The WS helper", () => {
     expect(connections).toEqual({ client1: false, client2: false });
   });
 
-  it("handles messages received in a quick succession", async () => {
+  it('handles messages received in a quick succession', async () => {
     expect.hasAssertions();
-    const server = new WS("ws://localhost:1234");
-    const client = new WebSocket("ws://localhost:1234");
+    const server = new WS('ws://localhost:1234');
+    const client = new WebSocket('ws://localhost:1234');
     await server.connected;
 
-    "abcdef".split("").forEach(client.send.bind(client));
+    'abcdef'.split('').forEach(client.send.bind(client));
 
     let waitedEnough: (value: void) => void;
     const waitABit = new Promise((done) => (waitedEnough = done));
@@ -68,7 +68,7 @@ describe("The WS helper", () => {
       await server.nextMessage;
       await server.nextMessage;
 
-      "xyz".split("").forEach(client.send.bind(client));
+      'xyz'.split('').forEach(client.send.bind(client));
       await server.nextMessage;
       await server.nextMessage;
       await server.nextMessage;
@@ -76,14 +76,14 @@ describe("The WS helper", () => {
     }, 500);
 
     await waitABit;
-    expect(server.messages).toEqual("abcdefxyz".split(""));
+    expect(server.messages).toEqual('abcdefxyz'.split(''));
   });
 
-  it("sends messages to connected clients", async () => {
-    const server = new WS("ws://localhost:1234");
-    const client1 = new WebSocket("ws://localhost:1234");
+  it('sends messages to connected clients', async () => {
+    const server = new WS('ws://localhost:1234');
+    const client1 = new WebSocket('ws://localhost:1234');
     await server.connected;
-    const client2 = new WebSocket("ws://localhost:1234");
+    const client2 = new WebSocket('ws://localhost:1234');
     await server.connected;
 
     interface Messages {
@@ -98,48 +98,46 @@ describe("The WS helper", () => {
       messages.client2.push(e.data);
     };
 
-    server.send("hello everyone");
+    server.send('hello everyone');
     expect(messages).toEqual({
-      client1: ["hello everyone"],
-      client2: ["hello everyone"],
+      client1: ['hello everyone'],
+      client2: ['hello everyone'],
     });
   });
 
-  it("seamlessly handles JSON protocols", async () => {
-    const server = new WS("ws://localhost:1234", { jsonProtocol: true });
-    const client = new WebSocket("ws://localhost:1234");
+  it('seamlessly handles JSON protocols', async () => {
+    const server = new WS('ws://localhost:1234', { jsonProtocol: true });
+    const client = new WebSocket('ws://localhost:1234');
 
     await server.connected;
     client.send(`{ "type": "GREETING", "payload": "hello" }`);
     const received = await server.nextMessage;
-    expect(server.messages).toEqual([{ type: "GREETING", payload: "hello" }]);
-    expect(received).toEqual({ type: "GREETING", payload: "hello" });
+    expect(server.messages).toEqual([{ type: 'GREETING', payload: 'hello' }]);
+    expect(received).toEqual({ type: 'GREETING', payload: 'hello' });
 
     let message = null;
     client.onmessage = (e) => {
       message = e.data;
     };
 
-    server.send({ type: "CHITCHAT", payload: "Nice weather today" });
-    expect(message).toEqual(
-      `{"type":"CHITCHAT","payload":"Nice weather today"}`
-    );
+    server.send({ type: 'CHITCHAT', payload: 'Nice weather today' });
+    expect(message).toEqual(`{"type":"CHITCHAT","payload":"Nice weather today"}`);
   });
 
-  it("rejects connections that fail the verifyClient option", async () => {
+  it('rejects connections that fail the verifyClient option', async () => {
     const verifyClient = vi.fn().mockReturnValue(false);
-    new WS("ws://localhost:1234", { verifyClient: verifyClient });
+    new WS('ws://localhost:1234', { verifyClient: verifyClient });
     const errorCallback = vi.fn();
 
     await expect(
       new Promise((resolve, reject) => {
         errorCallback.mockImplementation(reject);
-        const client = new WebSocket("ws://localhost:1234");
+        const client = new WebSocket('ws://localhost:1234');
         client.onerror = errorCallback;
         client.onopen = resolve;
       })
       // WebSocket onerror event gets called with an event of type error and not an error
-    ).rejects.toEqual(expect.objectContaining({ type: "error" }));
+    ).rejects.toEqual(expect.objectContaining({ type: 'error' }));
 
     expect(verifyClient).toHaveBeenCalledTimes(1);
     expect(errorCallback).toHaveBeenCalledTimes(1);
@@ -148,23 +146,23 @@ describe("The WS helper", () => {
     expect(WebSocket).toBeDefined();
   });
 
-  it("rejects connections that fail the selectProtocol option", async () => {
+  it('rejects connections that fail the selectProtocol option', async () => {
     const selectProtocol = () => null;
-    new WS("ws://localhost:1234", { selectProtocol });
+    new WS('ws://localhost:1234', { selectProtocol });
     const errorCallback = vi.fn();
 
     await expect(
       new Promise((resolve, reject) => {
         errorCallback.mockImplementationOnce(reject);
-        const client = new WebSocket("ws://localhost:1234", "foo");
+        const client = new WebSocket('ws://localhost:1234', 'foo');
         client.onerror = errorCallback;
         client.onopen = resolve;
       })
     ).rejects.toEqual(
       // WebSocket onerror event gets called with an event of type error and not an error
       expect.objectContaining({
-        type: "error",
-        currentTarget: expect.objectContaining({ protocol: "foo" }),
+        type: 'error',
+        currentTarget: expect.objectContaining({ protocol: 'foo' }),
       })
     );
 
@@ -172,15 +170,15 @@ describe("The WS helper", () => {
     expect(WebSocket).toBeDefined();
   });
 
-  it("closes the connection", async () => {
-    const server = new WS("ws://localhost:1234");
-    const client = new WebSocket("ws://localhost:1234");
+  it('closes the connection', async () => {
+    const server = new WS('ws://localhost:1234');
+    const client = new WebSocket('ws://localhost:1234');
     const closeCallback = vi.fn();
     await server.connected;
 
     client.onclose = closeCallback;
 
-    server.send("hello everyone");
+    server.send('hello everyone');
     server.close();
 
     expect(closeCallback).toHaveBeenCalledTimes(1);
@@ -188,8 +186,8 @@ describe("The WS helper", () => {
       expect.objectContaining({
         code: 1000,
         eventPhase: 0,
-        reason: "",
-        type: "close",
+        reason: '',
+        type: 'close',
         wasClean: true,
       })
     );
@@ -198,40 +196,40 @@ describe("The WS helper", () => {
     expect(WebSocket).toBeDefined();
   });
 
-  it("closes the connection with a custom close code", async () => {
-    const server = new WS("ws://localhost:1234");
-    const client = new WebSocket("ws://localhost:1234");
+  it('closes the connection with a custom close code', async () => {
+    const server = new WS('ws://localhost:1234');
+    const client = new WebSocket('ws://localhost:1234');
     const closeCallback = vi.fn();
     await server.connected;
     client.onclose = closeCallback;
 
-    server.close({ code: 1234, reason: "boom", wasClean: false });
+    server.close({ code: 1234, reason: 'boom', wasClean: false });
 
     expect(closeCallback).toHaveBeenCalledTimes(1);
     expect(closeCallback).toHaveBeenCalledWith(
       expect.objectContaining({
         code: 1234,
         eventPhase: 0,
-        reason: "boom",
-        type: "close",
+        reason: 'boom',
+        type: 'close',
         wasClean: false,
       })
     );
   });
 
-  it("can refuse connections", async () => {
+  it('can refuse connections', async () => {
     expect.assertions(6);
 
-    const server = new WS("ws://localhost:1234");
-    server.on("connection", (socket) => {
-      socket.close({ wasClean: false, code: 1003, reason: "NOPE" });
+    const server = new WS('ws://localhost:1234');
+    server.on('connection', (socket) => {
+      socket.close({ wasClean: false, code: 1003, reason: 'NOPE' });
     });
 
-    const client = new WebSocket("ws://localhost:1234");
+    const client = new WebSocket('ws://localhost:1234');
     client.onclose = (event: CloseEvent) => {
       expect(event.code).toBe(1003);
       expect(event.wasClean).toBe(false);
-      expect(event.reason).toBe("NOPE");
+      expect(event.reason).toBe('NOPE');
     };
 
     expect(client.readyState).toBe(WebSocket.CONNECTING);
@@ -243,44 +241,44 @@ describe("The WS helper", () => {
     expect(client.readyState).toBe(WebSocket.CLOSED);
   });
 
-  it("can send messages in the connection callback", async () => {
+  it('can send messages in the connection callback', async () => {
     expect.assertions(1);
 
-    const server = new WS("ws://localhost:1234");
+    const server = new WS('ws://localhost:1234');
     let receivedMessage = null;
 
-    server.on("connection", (socket) => {
-      socket.send("hello there");
+    server.on('connection', (socket) => {
+      socket.send('hello there');
     });
 
-    const client = new WebSocket("ws://localhost:1234");
+    const client = new WebSocket('ws://localhost:1234');
     client.onmessage = (event) => {
       receivedMessage = event.data;
     };
 
     await server.connected;
-    expect(receivedMessage).toBe("hello there");
+    expect(receivedMessage).toBe('hello there');
   });
 
-  it("provides a callback when receiving messages", async () => {
-    const server = new WS("ws://localhost:1234");
+  it('provides a callback when receiving messages', async () => {
+    const server = new WS('ws://localhost:1234');
     expect.assertions(1);
 
-    server.on("connection", (socket) => {
-      socket.on("message", (msg) => {
-        expect(msg).toEqual("client says hi");
+    server.on('connection', (socket) => {
+      socket.on('message', (msg) => {
+        expect(msg).toEqual('client says hi');
       });
     });
 
-    const client = new WebSocket("ws://localhost:1234");
+    const client = new WebSocket('ws://localhost:1234');
     await server.connected;
-    client.send("client says hi");
+    client.send('client says hi');
     await server.nextMessage;
   });
 
-  it("sends errors to connected clients", async () => {
-    const server = new WS("ws://localhost:1234");
-    const client = new WebSocket("ws://localhost:1234");
+  it('sends errors to connected clients', async () => {
+    const server = new WS('ws://localhost:1234');
+    const client = new WebSocket('ws://localhost:1234');
     await server.connected;
 
     let disconnected = false;
@@ -292,38 +290,38 @@ describe("The WS helper", () => {
       error = e;
     };
 
-    server.send("hello everyone");
+    server.send('hello everyone');
     server.error();
     expect(disconnected).toBe(true);
-    expect(error.origin).toBe("ws://localhost:1234/");
-    expect(error.type).toBe("error");
+    expect(error.origin).toBe('ws://localhost:1234/');
+    expect(error.type).toBe('error');
   });
 
-  it("resolves the client socket that connected", async () => {
-    const server = new WS("ws://localhost:1234");
-    const client = new WebSocket("ws://localhost:1234");
+  it('resolves the client socket that connected', async () => {
+    const server = new WS('ws://localhost:1234');
+    const client = new WebSocket('ws://localhost:1234');
 
     const socket = await server.connected;
 
     expect(socket).toStrictEqual(client);
   });
 
-  it("passes on close options on server error event", async () => {
-    const server = new WS("ws://localhost:1234");
-    const client = new WebSocket("ws://localhost:1234");
+  it('passes on close options on server error event', async () => {
+    const server = new WS('ws://localhost:1234');
+    const client = new WebSocket('ws://localhost:1234');
     const closeCallback = vi.fn();
     await server.connected;
     client.onclose = closeCallback;
 
-    server.error({ code: 1234, reason: "boom", wasClean: false });
+    server.error({ code: 1234, reason: 'boom', wasClean: false });
 
     expect(closeCallback).toHaveBeenCalledTimes(1);
     expect(closeCallback).toHaveBeenCalledWith(
       expect.objectContaining({
         code: 1234,
         eventPhase: 0,
-        reason: "boom",
-        type: "close",
+        reason: 'boom',
+        type: 'close',
         wasClean: false,
       })
     );

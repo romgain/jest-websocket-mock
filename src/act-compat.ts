@@ -15,7 +15,7 @@ type SyncAct = (callback: Callback) => void;
 let act: AsyncAct | SyncAct;
 
 try {
-  act = require("@testing-library/react").act;
+  act = require('@testing-library/react').act;
 } catch (_) {
   act = (callback: Function) => {
     callback();

@@ -30,20 +30,20 @@ servers that keep track of the messages they receive, and in turn
 can send messages to connected clients.
 
 ```js
-import WS from "jest-websocket-mock";
+import WS from 'jest-websocket-mock';
 
 // create a WS instance, listening on port 1234 on localhost
-const server = new WS("ws://localhost:1234");
+const server = new WS('ws://localhost:1234');
 
 // real clients can connect
-const client = new WebSocket("ws://localhost:1234");
+const client = new WebSocket('ws://localhost:1234');
 await server.connected; // wait for the server to have established the connection
 
 // the mock websocket server will record all the messages it receives
-client.send("hello");
+client.send('hello');
 
 // the mock websocket server can also send messages to all connected clients
-server.send("hello everyone");
+server.send('hello everyone');
 
 // ...simulate an error and close the connection
 server.error();
@@ -61,8 +61,8 @@ The `WS` constructor also accepts an optional options object as second argument:
 - `jsonProtocol: true` can be used to automatically serialize and deserialize JSON messages:
 
 ```js
-const server = new WS("ws://localhost:1234", { jsonProtocol: true });
-server.send({ type: "GREETING", payload: "hello" });
+const server = new WS('ws://localhost:1234', { jsonProtocol: true });
+server.send({ type: 'GREETING', payload: 'hello' });
 ```
 
 - The `mock-server` options `verifyClient` and `selectProtocol` are directly passed-through to the mock-server's constructor.
@@ -105,25 +105,25 @@ on received messages easier:
 ### Run assertions on messages as they are received by the mock server
 
 ```js
-test("the server keeps track of received messages, and yields them as they come in", async () => {
-  const server = new WS("ws://localhost:1234");
-  const client = new WebSocket("ws://localhost:1234");
+test('the server keeps track of received messages, and yields them as they come in', async () => {
+  const server = new WS('ws://localhost:1234');
+  const client = new WebSocket('ws://localhost:1234');
 
   await server.connected;
-  client.send("hello");
-  await expect(server).toReceiveMessage("hello");
-  expect(server).toHaveReceivedMessages(["hello"]);
+  client.send('hello');
+  await expect(server).toReceiveMessage('hello');
+  expect(server).toHaveReceivedMessages(['hello']);
 });
 ```
 
 ### Send messages to the connected clients
 
 ```js
-test("the mock server sends messages to connected clients", async () => {
-  const server = new WS("ws://localhost:1234");
-  const client1 = new WebSocket("ws://localhost:1234");
+test('the mock server sends messages to connected clients', async () => {
+  const server = new WS('ws://localhost:1234');
+  const client1 = new WebSocket('ws://localhost:1234');
   await server.connected;
-  const client2 = new WebSocket("ws://localhost:1234");
+  const client2 = new WebSocket('ws://localhost:1234');
   await server.connected;
 
   const messages = { client1: [], client2: [] };
@@ -134,10 +134,10 @@ test("the mock server sends messages to connected clients", async () => {
     messages.client2.push(e.data);
   };
 
-  server.send("hello everyone");
+  server.send('hello everyone');
   expect(messages).toEqual({
-    client1: ["hello everyone"],
-    client2: ["hello everyone"],
+    client1: ['hello everyone'],
+    client2: ['hello everyone'],
   });
 });
 ```
@@ -148,23 +148,21 @@ test("the mock server sends messages to connected clients", async () => {
 JSON messages:
 
 ```js
-test("the mock server seamlessly handles JSON protocols", async () => {
-  const server = new WS("ws://localhost:1234", { jsonProtocol: true });
-  const client = new WebSocket("ws://localhost:1234");
+test('the mock server seamlessly handles JSON protocols', async () => {
+  const server = new WS('ws://localhost:1234', { jsonProtocol: true });
+  const client = new WebSocket('ws://localhost:1234');
 
   await server.connected;
   client.send(`{ "type": "GREETING", "payload": "hello" }`);
-  await expect(server).toReceiveMessage({ type: "GREETING", payload: "hello" });
-  expect(server).toHaveReceivedMessages([
-    { type: "GREETING", payload: "hello" },
-  ]);
+  await expect(server).toReceiveMessage({ type: 'GREETING', payload: 'hello' });
+  expect(server).toHaveReceivedMessages([{ type: 'GREETING', payload: 'hello' }]);
 
   let message = null;
   client.onmessage = (e) => {
     message = e.data;
   };
 
-  server.send({ type: "CHITCHAT", payload: "Nice weather today" });
+  server.send({ type: 'CHITCHAT', payload: 'Nice weather today' });
   expect(message).toEqual(`{"type":"CHITCHAT","payload":"Nice weather today"}`);
 });
 ```
@@ -177,19 +175,19 @@ This can be used to test behaviour for a client that connects to a WebSocket ser
 **Note** : _Currently `mock-socket`'s implementation does not send any parameters to this function (unlike the real `ws` implementation)._
 
 ```js
-test("rejects connections that fail the verifyClient option", async () => {
-  new WS("ws://localhost:1234", { verifyClient: () => false });
+test('rejects connections that fail the verifyClient option', async () => {
+  new WS('ws://localhost:1234', { verifyClient: () => false });
   const errorCallback = jest.fn();
 
   await expect(
     new Promise((resolve, reject) => {
       errorCallback.mockImplementation(reject);
-      const client = new WebSocket("ws://localhost:1234");
+      const client = new WebSocket('ws://localhost:1234');
       client.onerror = errorCallback;
       client.onopen = resolve;
     })
     // WebSocket onerror event gets called with an event of type error and not an error
-  ).rejects.toEqual(expect.objectContaining({ type: "error" }));
+  ).rejects.toEqual(expect.objectContaining({ type: 'error' }));
 });
 ```
 
@@ -199,23 +197,23 @@ A `selectProtocol` function can be given in the options for the `jest-websocket-
 This can be used to test behaviour for a client that connects to a WebSocket server using the wrong protocol.
 
 ```js
-test("rejects connections that fail the selectProtocol option", async () => {
+test('rejects connections that fail the selectProtocol option', async () => {
   const selectProtocol = () => null;
-  new WS("ws://localhost:1234", { selectProtocol });
+  new WS('ws://localhost:1234', { selectProtocol });
   const errorCallback = jest.fn();
 
   await expect(
     new Promise((resolve, reject) => {
       errorCallback.mockImplementationOnce(reject);
-      const client = new WebSocket("ws://localhost:1234", "foo");
+      const client = new WebSocket('ws://localhost:1234', 'foo');
       client.onerror = errorCallback;
       client.onopen = resolve;
     })
   ).rejects.toEqual(
     // WebSocket onerror event gets called with an event of type error and not an error
     expect.objectContaining({
-      type: "error",
-      currentTarget: expect.objectContaining({ protocol: "foo" }),
+      type: 'error',
+      currentTarget: expect.objectContaining({ protocol: 'foo' }),
     })
   );
 });
@@ -224,9 +222,9 @@ test("rejects connections that fail the selectProtocol option", async () => {
 ### Sending errors
 
 ```js
-test("the mock server sends errors to connected clients", async () => {
-  const server = new WS("ws://localhost:1234");
-  const client = new WebSocket("ws://localhost:1234");
+test('the mock server sends errors to connected clients', async () => {
+  const server = new WS('ws://localhost:1234');
+  const client = new WebSocket('ws://localhost:1234');
   await server.connected;
 
   let disconnected = false;
@@ -238,11 +236,11 @@ test("the mock server sends errors to connected clients", async () => {
     error = e;
   };
 
-  server.send("hello everyone");
+  server.send('hello everyone');
   server.error();
   expect(disconnected).toBe(true);
-  expect(error.origin).toBe("ws://localhost:1234/");
-  expect(error.type).toBe("error");
+  expect(error.origin).toBe('ws://localhost:1234/');
+  expect(error.type).toBe('error');
 });
 ```
 
@@ -251,17 +249,17 @@ test("the mock server sends errors to connected clients", async () => {
 #### For instance, to refuse connections:
 
 ```js
-it("the server can refuse connections", async () => {
-  const server = new WS("ws://localhost:1234");
-  server.on("connection", (socket) => {
-    socket.close({ wasClean: false, code: 1003, reason: "NOPE" });
+it('the server can refuse connections', async () => {
+  const server = new WS('ws://localhost:1234');
+  server.on('connection', (socket) => {
+    socket.close({ wasClean: false, code: 1003, reason: 'NOPE' });
   });
 
-  const client = new WebSocket("ws://localhost:1234");
+  const client = new WebSocket('ws://localhost:1234');
   client.onclose = (event: CloseEvent) => {
     expect(event.code).toBe(1003);
     expect(event.wasClean).toBe(false);
-    expect(event.reason).toBe("NOPE");
+    expect(event.reason).toBe('NOPE');
   };
 
   expect(client.readyState).toBe(WebSocket.CONNECTING);
@@ -280,8 +278,8 @@ You can set up a mock server and a client, and reset them between tests:
 
 ```js
 beforeEach(async () => {
-  server = new WS("ws://localhost:1234");
-  client = new WebSocket("ws://localhost:1234");
+  server = new WS('ws://localhost:1234');
+  client = new WebSocket('ws://localhost:1234');
   await server.connected;
 });
 
@@ -332,7 +330,7 @@ to set up a [manual mock](https://jestjs.io/docs/en/manual-mocks#mocking-node-mo
 ```js
 // __mocks__/ws.js
 
-export { WebSocket as default } from "mock-socket";
+export { WebSocket as default } from 'mock-socket';
 ```
 
 **NOTE** The `ws` library is not 100% compatible with the browser API, and

@@ -7,13 +7,13 @@
  * supporting tests.
  **/
 
-const WebSocket = require("ws");
+const WebSocket = require('ws');
 
 const PORT = 8080;
 const server = new WebSocket.Server({ port: PORT });
 
-server.on("connection", function connection(ws, req) {
-  ws.on("message", function incoming(message) {
+server.on('connection', function connection(ws, req) {
+  ws.on('message', function incoming(message) {
     console.log(`[received] ${message}`);
     ws.send(`[echo] ${message}`);
   });

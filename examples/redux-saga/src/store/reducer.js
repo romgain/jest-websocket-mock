@@ -2,7 +2,7 @@
  * @copyright Romain Bertrand 2018
  */
 
-import { createActions, handleActions, combineActions } from "redux-actions";
+import { createActions, handleActions, combineActions } from 'redux-actions';
 
 const defaultState = {
   messages: [],
@@ -10,8 +10,8 @@ const defaultState = {
 };
 
 export const actions = createActions({
-  STORE_SENT_MESSAGE: text => ({ text, side: "sent" }),
-  STORE_RECEIVED_MESSAGE: text => ({ text, side: "received" }),
+  STORE_SENT_MESSAGE: (text) => ({ text, side: 'sent' }),
+  STORE_RECEIVED_MESSAGE: (text) => ({ text, side: 'received' }),
   SEND: undefined,
   CONNECTION_SUCCESS: () => ({ connected: true }),
   CONNECTION_LOST: () => ({ connected: false }),

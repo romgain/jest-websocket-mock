@@ -3,15 +3,15 @@
  * @copyright Akiomi Kamakura 2023
  */
 
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import WS from "../websocket";
-import "../matchers";
+import WS from '../websocket';
+import '../matchers';
 
 let server: WS, client: WebSocket;
 beforeEach(async () => {
-  server = new WS("ws://localhost:1234");
-  client = new WebSocket("ws://localhost:1234");
+  server = new WS('ws://localhost:1234');
+  client = new WebSocket('ws://localhost:1234');
   await server.connected;
 });
 
@@ -19,31 +19,31 @@ afterEach(() => {
   WS.clean();
 });
 
-describe(".toReceiveMessage", () => {
-  it("passes when the websocket server receives the expected message", async () => {
-    client.send("hello there");
-    await expect(server).toReceiveMessage("hello there");
+describe('.toReceiveMessage', () => {
+  it('passes when the websocket server receives the expected message', async () => {
+    client.send('hello there');
+    await expect(server).toReceiveMessage('hello there');
   });
 
-  it("passes when the websocket server receives the expected message with custom timeout", async () => {
+  it('passes when the websocket server receives the expected message with custom timeout', async () => {
     setTimeout(() => {
-      client.send("hello there");
+      client.send('hello there');
     }, 2000);
 
-    await expect(server).toReceiveMessage("hello there", { timeout: 3000 });
+    await expect(server).toReceiveMessage('hello there', { timeout: 3000 });
   });
 
-  it("passes when the websocket server receives the expected JSON message", async () => {
-    const jsonServer = new WS("ws://localhost:9876", { jsonProtocol: true });
-    const jsonClient = new WebSocket("ws://localhost:9876");
+  it('passes when the websocket server receives the expected JSON message', async () => {
+    const jsonServer = new WS('ws://localhost:9876', { jsonProtocol: true });
+    const jsonClient = new WebSocket('ws://localhost:9876');
     await jsonServer.connected;
     jsonClient.send(`{"answer":42}`);
     await expect(jsonServer).toReceiveMessage({ answer: 42 });
   });
 
-  it("fails when called with an expected argument that is not a valid WS", async () => {
+  it('fails when called with an expected argument that is not a valid WS', async () => {
     expect.hasAssertions();
-    await expect(expect("boom").toReceiveMessage("hello there")).rejects
+    await expect(expect('boom').toReceiveMessage('hello there')).rejects
       .toThrowErrorMatchingInlineSnapshot(`
 "[2mexpect([22m[31mWS[39m[2m).toReceiveMessage([22m[32mexpected[39m[2m)[22m
 
@@ -53,9 +53,9 @@ Received: string
 `);
   });
 
-  it("fails when the WS server does not receive the expected message", async () => {
+  it('fails when the WS server does not receive the expected message', async () => {
     expect.hasAssertions();
-    await expect(expect(server).toReceiveMessage("hello there")).rejects
+    await expect(expect(server).toReceiveMessage('hello there')).rejects
       .toThrowErrorMatchingInlineSnapshot(`
 "[2mexpect([22m[31mWS[39m[2m).toReceiveMessage([22m[32mexpected[39m[2m)[22m
 
@@ -64,11 +64,10 @@ but it didn't receive anything in 1000ms."
 `);
   });
 
-  it("fails when the WS server does not receive the expected message with custom timeout", async () => {
+  it('fails when the WS server does not receive the expected message with custom timeout', async () => {
     expect.hasAssertions();
-    await expect(
-      expect(server).toReceiveMessage("hello there", { timeout: 3000 })
-    ).rejects.toThrowErrorMatchingInlineSnapshot(`
+    await expect(expect(server).toReceiveMessage('hello there', { timeout: 3000 })).rejects
+      .toThrowErrorMatchingInlineSnapshot(`
 "[2mexpect([22m[31mWS[39m[2m).toReceiveMessage([22m[32mexpected[39m[2m)[22m
 
 Expected the websocket server to receive a message,
@@ -76,10 +75,10 @@ but it didn't receive anything in 3000ms."
 `);
   });
 
-  it("fails when the WS server receives a different message", async () => {
+  it('fails when the WS server receives a different message', async () => {
     expect.hasAssertions();
-    client.send("hello there");
-    await expect(expect(server).toReceiveMessage("HI!")).rejects
+    client.send('hello there');
+    await expect(expect(server).toReceiveMessage('HI!')).rejects
       .toThrowErrorMatchingInlineSnapshot(`
 "[2mexpect([22m[31mWS[39m[2m).toReceiveMessage([22m[32mexpected[39m[2m)[22m
 
@@ -99,7 +98,7 @@ Difference:
   });
 
   // TODO: Fix Object indentation
-  it("fails when expecting a JSON message but the server is not configured for JSON protocols", async () => {
+  it('fails when expecting a JSON message but the server is not configured for JSON protocols', async () => {
     expect.hasAssertions();
     client.send(`{"answer":42}`);
     await expect(expect(server).toReceiveMessage({ answer: 42 })).rejects
@@ -120,15 +119,15 @@ Difference:
   });
 });
 
-describe(".not.toReceiveMessage", () => {
+describe('.not.toReceiveMessage', () => {
   it("passes when the websocket server doesn't receive the expected message", async () => {
-    client.send("hello there");
+    client.send('hello there');
     await expect(server).not.toReceiveMessage("What's up?");
   });
 
-  it("fails when called with an expected argument that is not a valid WS", async () => {
+  it('fails when called with an expected argument that is not a valid WS', async () => {
     expect.hasAssertions();
-    await expect(expect("boom").not.toReceiveMessage("hello there")).rejects
+    await expect(expect('boom').not.toReceiveMessage('hello there')).rejects
       .toThrowErrorMatchingInlineSnapshot(`
 "[2mexpect([22m[31mWS[39m[2m).not.toReceiveMessage([22m[32mexpected[39m[2m)[22m
 
@@ -140,7 +139,7 @@ Received: string
 
   it("fails when the WS server doesn't receive any messages", async () => {
     expect.hasAssertions();
-    await expect(expect(server).not.toReceiveMessage("hello there")).rejects
+    await expect(expect(server).not.toReceiveMessage('hello there')).rejects
       .toThrowErrorMatchingInlineSnapshot(`
 "[2mexpect([22m[31mWS[39m[2m).not.toReceiveMessage([22m[32mexpected[39m[2m)[22m
 
@@ -149,10 +148,10 @@ but it didn't receive anything in 1000ms."
 `);
   });
 
-  it("fails when the WS server receives the un-expected message", async () => {
+  it('fails when the WS server receives the un-expected message', async () => {
     expect.hasAssertions();
-    client.send("hello there");
-    await expect(expect(server).not.toReceiveMessage("hello there")).rejects
+    client.send('hello there');
+    await expect(expect(server).not.toReceiveMessage('hello there')).rejects
       .toThrowErrorMatchingInlineSnapshot(`
 "[2mexpect([22m[31mWS[39m[2m).not.toReceiveMessage([22m[32mexpected[39m[2m)[22m
 
@@ -164,20 +163,20 @@ Received:
   });
 });
 
-describe(".toHaveReceivedMessages", () => {
-  it("passes when the websocket server received the expected messages", async () => {
-    client.send("hello there");
-    client.send("how are you?");
-    client.send("good?");
+describe('.toHaveReceivedMessages', () => {
+  it('passes when the websocket server received the expected messages', async () => {
+    client.send('hello there');
+    client.send('how are you?');
+    client.send('good?');
     await server.nextMessage;
     await server.nextMessage;
     await server.nextMessage;
-    expect(server).toHaveReceivedMessages(["hello there", "good?"]);
+    expect(server).toHaveReceivedMessages(['hello there', 'good?']);
   });
 
-  it("passes when the websocket server received the expected JSON messages", async () => {
-    const jsonServer = new WS("ws://localhost:9876", { jsonProtocol: true });
-    const jsonClient = new WebSocket("ws://localhost:9876");
+  it('passes when the websocket server received the expected JSON messages', async () => {
+    const jsonServer = new WS('ws://localhost:9876', { jsonProtocol: true });
+    const jsonClient = new WebSocket('ws://localhost:9876');
     await jsonServer.connected;
     jsonClient.send(`{"type":"GREETING","payload":"hello there"}`);
     jsonClient.send(`{"type":"GREETING","payload":"how are you?"}`);
@@ -186,21 +185,21 @@ describe(".toHaveReceivedMessages", () => {
     await jsonServer.nextMessage;
     await jsonServer.nextMessage;
     expect(jsonServer).toHaveReceivedMessages([
-      { type: "GREETING", payload: "good?" },
-      { type: "GREETING", payload: "hello there" },
+      { type: 'GREETING', payload: 'good?' },
+      { type: 'GREETING', payload: 'hello there' },
     ]);
   });
 
   // TODO: Fix Array indentation
-  it("fails when the websocket server did not receive the expected messages", async () => {
-    client.send("hello there");
-    client.send("how are you?");
-    client.send("good?");
+  it('fails when the websocket server did not receive the expected messages', async () => {
+    client.send('hello there');
+    client.send('how are you?');
+    client.send('good?');
     await server.nextMessage;
     await server.nextMessage;
     await server.nextMessage;
     expect(() => {
-      expect(server).toHaveReceivedMessages(["hello there", "'sup?"]);
+      expect(server).toHaveReceivedMessages(['hello there', "'sup?"]);
     }).toThrowErrorMatchingInlineSnapshot(`
 "[2mexpect([22m[31mWS[39m[2m).toHaveReceivedMessages([22m[32mexpected[39m[2m)[22m
 
@@ -220,9 +219,9 @@ Received:
 `);
   });
 
-  it("fails when called with an expected argument that is not a valid WS", async () => {
+  it('fails when called with an expected argument that is not a valid WS', async () => {
     expect(() => {
-      expect("boom").toHaveReceivedMessages(["hello there"]);
+      expect('boom').toHaveReceivedMessages(['hello there']);
     }).toThrowErrorMatchingInlineSnapshot(`
 "[2mexpect([22m[31mWS[39m[2m).toHaveReceivedMessages([22m[32mexpected[39m[2m)[22m
 
@@ -233,30 +232,26 @@ Received: string
   });
 });
 
-describe(".not.toHaveReceivedMessages", () => {
-  it("passes when the websocket server received none of the specified messages", async () => {
-    client.send("hello there");
-    client.send("how are you?");
-    client.send("good?");
+describe('.not.toHaveReceivedMessages', () => {
+  it('passes when the websocket server received none of the specified messages', async () => {
+    client.send('hello there');
+    client.send('how are you?');
+    client.send('good?');
     await server.nextMessage;
     await server.nextMessage;
     await server.nextMessage;
-    expect(server).not.toHaveReceivedMessages(["'sup?", "U good?"]);
+    expect(server).not.toHaveReceivedMessages(["'sup?", 'U good?']);
   });
 
-  it("fails when the websocket server received at least one unexpected message", async () => {
-    client.send("hello there");
-    client.send("how are you?");
-    client.send("good?");
+  it('fails when the websocket server received at least one unexpected message', async () => {
+    client.send('hello there');
+    client.send('how are you?');
+    client.send('good?');
     await server.nextMessage;
     await server.nextMessage;
     await server.nextMessage;
     expect(() => {
-      expect(server).not.toHaveReceivedMessages([
-        "'sup?",
-        "U good?",
-        "hello there",
-      ]);
+      expect(server).not.toHaveReceivedMessages(["'sup?", 'U good?', 'hello there']);
     }).toThrowErrorMatchingInlineSnapshot(`
 "[2mexpect([22m[31mWS[39m[2m).not.toHaveReceivedMessages([22m[32mexpected[39m[2m)[22m
 
@@ -275,9 +270,9 @@ But it received:
 `);
   });
 
-  it("fails when called with an expected argument that is not a valid WS", async () => {
+  it('fails when called with an expected argument that is not a valid WS', async () => {
     expect(() => {
-      expect("boom").not.toHaveReceivedMessages(["hello there"]);
+      expect('boom').not.toHaveReceivedMessages(['hello there']);
     }).toThrowErrorMatchingInlineSnapshot(`
 "[2mexpect([22m[31mWS[39m[2m).not.toHaveReceivedMessages([22m[32mexpected[39m[2m)[22m
 

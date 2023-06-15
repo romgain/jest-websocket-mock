@@ -17,8 +17,8 @@
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
     "build": "vite build && tsc -p tsconfig.build.json",
-    "prettier:check": "prettier --list-different \"src/**/*.{ts,js,md}\" \"**/*.md\"",
-    "prettier:apply": "prettier --write \"src/**/*.{ts,js}\" \"**/*.md\"",
+    "lint": "prettier --check .",
+    "format": "prettier --write .",
     "prepublishOnly": "npm run build",
     "test": "vitest --run",
     "test:watch": "vitest"
