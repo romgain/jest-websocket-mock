@@ -4,10 +4,13 @@
  */
 
 import { diff } from 'jest-diff';
+import type { ExpectStatic } from 'vitest';
 import { expect } from 'vitest';
 
 import WS from './websocket';
 import { DeserializedMessage } from './websocket';
+
+export type MatcherState = ReturnType<ExpectStatic['getState']>;
 
 export type ReceiveMessageOptions = {
   timeout?: number;
@@ -32,11 +35,8 @@ declare module 'vitest' {
 const WAIT_DELAY = 1000;
 const TIMEOUT = Symbol('timoeut');
 
-// TODO: Don't use @ts-ignore
 const makeInvalidWsMessage = function makeInvalidWsMessage(
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  this: jest.MatcherUtils,
+  this: MatcherState,
   ws: WS,
   matcher: string
 ) {
