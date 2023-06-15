@@ -1,10 +1,12 @@
 /**
  * @copyright Romain Bertrand 2018
+ * @copyright Akiomi Kamakura 2023
  */
 
-import { Server, ServerOptions, CloseOptions, Client } from 'mock-socket';
-import Queue from './queue';
+import { Client, CloseOptions, Server, ServerOptions } from 'mock-socket';
+
 import act from './act-compat';
+import Queue from './queue';
 
 const identity = (x: string) => x;
 
@@ -31,7 +33,7 @@ export default class WS {
   messagesToConsume = new Queue();
 
   private _isConnected: Promise<Client>;
-  private _isClosed: Promise<{}>;
+  private _isClosed: Promise<Client>;
 
   static clean() {
     WS.instances.forEach((instance) => {
@@ -102,6 +104,7 @@ export default class WS {
     eventName: 'connection' | 'message' | 'close',
     callback: (socket: MockWebSocket) => void
   ): void {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore https://github.com/romgain/jest-websocket-mock/issues/26#issuecomment-571579567
     this.server.on(eventName, callback);
   }

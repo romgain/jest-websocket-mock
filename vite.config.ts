@@ -1,5 +1,5 @@
-import { defineConfig } from 'vitest/config';
 import nodePolyfills from 'vite-plugin-node-stdlib-browser';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [nodePolyfills()],

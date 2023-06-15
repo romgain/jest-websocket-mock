@@ -281,8 +281,9 @@ describe('The WS helper', () => {
     const client = new WebSocket('ws://localhost:1234');
     await server.connected;
 
-    let disconnected = false;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let error: any; // bad types in MockSockets
+    let disconnected = false;
     client.onclose = () => {
       disconnected = true;
     };

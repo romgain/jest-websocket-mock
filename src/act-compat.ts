@@ -1,5 +1,6 @@
 /**
  * @copyright Romain Bertrand 2018
+ * @copyright Akiomi Kamakura 2023
  *
  * A simple compatibility method for react's "act".
  * If @testing-library/react is already installed, we just use
@@ -15,9 +16,10 @@ type SyncAct = (callback: Callback) => void;
 let act: AsyncAct | SyncAct;
 
 try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   act = require('@testing-library/react').act;
 } catch (_) {
-  act = (callback: Function) => {
+  act = (callback: () => void) => {
     callback();
   };
 }

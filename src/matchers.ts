@@ -22,14 +22,18 @@ interface CustomMatchers<R = unknown> {
 }
 
 declare module 'vitest' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/no-explicit-any
   interface Assertion<T = any> extends CustomMatchers<T> {}
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface AsymmetricMatchersContaining extends CustomMatchers {}
 }
 
 // TODO: Fix type definitions
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace jest {
-    interface Matchers<R, T> {
+    interface Matchers<R> {
       toReceiveMessage<TMessage = object>(
         message: DeserializedMessage<TMessage>,
         options?: ReceiveMessageOptions
@@ -44,6 +48,7 @@ const TIMEOUT = Symbol('timoeut');
 
 // TODO: Don't use @ts-ignore
 const makeInvalidWsMessage = function makeInvalidWsMessage(
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   this: jest.MatcherUtils,
   ws: WS,

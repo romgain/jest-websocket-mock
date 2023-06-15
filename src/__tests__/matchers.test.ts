@@ -3,10 +3,11 @@
  * @copyright Akiomi Kamakura 2023
  */
 
+import '../matchers';
+
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import WS from '../websocket';
-import '../matchers';
 
 let server: WS, client: WebSocket;
 beforeEach(async () => {
