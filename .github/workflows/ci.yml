@@ -50,6 +50,7 @@ jobs:
         with:
           node-version: 18
       - run: npm ci
-      - run: npm install -g codecov
       - run: unset GITHUB_ACTIONS && npm test -- --coverage
-      - run: codecov
+      - uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
