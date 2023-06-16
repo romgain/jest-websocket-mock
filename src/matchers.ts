@@ -17,10 +17,7 @@ export type ReceiveMessageOptions = {
 };
 
 interface CustomMatchers<R = unknown> {
-  toReceiveMessage<TMessage = object>(
-    message: DeserializedMessage<TMessage>,
-    options?: ReceiveMessageOptions
-  ): Promise<R>;
+  toReceiveMessage<TMessage = object>(message: DeserializedMessage<TMessage>, options?: ReceiveMessageOptions): Promise<R>;
   toHaveReceivedMessages<TMessage = object>(messages: Array<DeserializedMessage<TMessage>>): R;
 }
 
@@ -35,11 +32,7 @@ declare module 'vitest' {
 const WAIT_DELAY = 1000;
 const TIMEOUT = Symbol('timoeut');
 
-const makeInvalidWsMessage = function makeInvalidWsMessage(
-  this: MatcherState,
-  ws: WS,
-  matcher: string
-) {
+const makeInvalidWsMessage = function makeInvalidWsMessage(this: MatcherState, ws: WS, matcher: string) {
   return (
     this.utils.matcherHint(this.isNot ? `.not.${matcher}` : `.${matcher}`, 'WS', 'expected') +
     '\n\n' +
@@ -70,11 +63,7 @@ expect.extend({
       return {
         pass: this.isNot, // always fail
         message: () =>
-          this.utils.matcherHint(
-            this.isNot ? '.not.toReceiveMessage' : '.toReceiveMessage',
-            'WS',
-            'expected'
-          ) +
+          this.utils.matcherHint(this.isNot ? '.not.toReceiveMessage' : '.toReceiveMessage', 'WS', 'expected') +
           '\n\n' +
           `Expected the websocket server to receive a message,\n` +
           `but it didn't receive anything in ${waitDelay}ms.`,

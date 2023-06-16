@@ -19,14 +19,14 @@ export const actions = createActions({
 
 const reducer = handleActions(
   {
-    [combineActions(actions.storeReceivedMessage, actions.storeSentMessage)]: (
-      state,
-      { payload }
-    ) => ({ ...state, messages: [...state.messages, payload] }),
-    [combineActions(actions.connectionSuccess, actions.connectionLost)]: (
-      state,
-      { payload: { connected } }
-    ) => ({ ...state, connected }),
+    [combineActions(actions.storeReceivedMessage, actions.storeSentMessage)]: (state, { payload }) => ({
+      ...state,
+      messages: [...state.messages, payload],
+    }),
+    [combineActions(actions.connectionSuccess, actions.connectionLost)]: (state, { payload: { connected } }) => ({
+      ...state,
+      connected,
+    }),
   },
   defaultState
 );
