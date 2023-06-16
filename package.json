@@ -1,6 +1,6 @@
 {
   "name": "vitest-websocket-mock",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Mock websockets and assert complex websocket interactions with Jest",
   "type": "module",
   "repository": {
