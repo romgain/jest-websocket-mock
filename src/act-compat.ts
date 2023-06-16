@@ -1,4 +1,7 @@
 /**
+ * @copyright Romain Bertrand 2018
+ * @copyright Akiomi Kamakura 2023
+ *
  * A simple compatibility method for react's "act".
  * If @testing-library/react is already installed, we just use
  * their implementation - it's complete and has useful warnings.
@@ -13,9 +16,10 @@ type SyncAct = (callback: Callback) => void;
 let act: AsyncAct | SyncAct;
 
 try {
-  act = require("@testing-library/react").act;
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  act = require('@testing-library/react').act;
 } catch (_) {
-  act = (callback: Function) => {
+  act = (callback: () => void) => {
     callback();
   };
 }

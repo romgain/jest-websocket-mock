@@ -1,13 +1,17 @@
-const { act } = require("react-dom/test-utils");
+/**
+ * @copyright Romain Bertrand 2018
+ */
 
-describe("The index", () => {
-  it("can be imported without errors", () => {
-    const root = document.createElement("div");
-    root.setAttribute("id", "root");
+const { act } = require('react-dom/test-utils');
+
+describe('The index', () => {
+  it('can be imported without errors', () => {
+    const root = document.createElement('div');
+    root.setAttribute('id', 'root');
     document.body.appendChild(root);
 
     act(() => {
-      require("./index.tsx");
+      require('./index.tsx');
     });
   });
 });

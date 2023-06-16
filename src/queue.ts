@@ -1,9 +1,11 @@
+/**
+ * @copyright Romain Bertrand 2018
+ */
+
 export default class Queue<ItemT> {
   pendingItems: Array<ItemT> = [];
   nextItemResolver!: () => void;
-  nextItem: Promise<void> = new Promise(
-    (done) => (this.nextItemResolver = done)
-  );
+  nextItem: Promise<void> = new Promise((done) => (this.nextItemResolver = done));
 
   put(item: ItemT): void {
     this.pendingItems.push(item);
@@ -18,9 +20,7 @@ export default class Queue<ItemT> {
       return Promise.resolve(item);
     }
     let resolver: (item: ItemT) => void;
-    const nextItemPromise: Promise<ItemT> = new Promise(
-      (done) => (resolver = done)
-    );
+    const nextItemPromise: Promise<ItemT> = new Promise((done) => (resolver = done));
     this.nextItem.then(() => {
       resolver(this.pendingItems.shift() as ItemT);
     });

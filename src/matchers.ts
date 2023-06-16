@@ -1,40 +1,41 @@
-import { diff } from "jest-diff";
-import WS from "./websocket";
-import { DeserializedMessage } from "./websocket";
+/**
+ * @copyright Romain Bertrand 2018
+ * @copyright Akiomi Kamakura 2023
+ */
 
-type ReceiveMessageOptions = {
+import { diff } from 'jest-diff';
+import type { ExpectStatic } from 'vitest';
+import { expect } from 'vitest';
+
+import WS from './websocket';
+import { DeserializedMessage } from './websocket';
+
+export type MatcherState = ReturnType<ExpectStatic['getState']>;
+
+export type ReceiveMessageOptions = {
   timeout?: number;
 };
 
-declare global {
-  namespace jest {
-    interface Matchers<R, T> {
-      toReceiveMessage<TMessage = object>(
-        message: DeserializedMessage<TMessage>,
-        options?: ReceiveMessageOptions
-      ): Promise<R>;
-      toHaveReceivedMessages<TMessage = object>(
-        messages: Array<DeserializedMessage<TMessage>>
-      ): R;
-    }
-  }
+interface CustomMatchers<R = unknown> {
+  toReceiveMessage<TMessage = object>(message: DeserializedMessage<TMessage>, options?: ReceiveMessageOptions): Promise<R>;
+  toHaveReceivedMessages<TMessage = object>(messages: Array<DeserializedMessage<TMessage>>): R;
+}
+
+declare module 'vitest' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/no-explicit-any
+  interface Assertion<T = any> extends CustomMatchers<T> {}
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface AsymmetricMatchersContaining extends CustomMatchers {}
 }
 
 const WAIT_DELAY = 1000;
-const TIMEOUT = Symbol("timoeut");
+const TIMEOUT = Symbol('timoeut');
 
-const makeInvalidWsMessage = function makeInvalidWsMessage(
-  this: jest.MatcherUtils,
-  ws: WS,
-  matcher: string
-) {
+const makeInvalidWsMessage = function makeInvalidWsMessage(this: MatcherState, ws: WS, matcher: string) {
   return (
-    this.utils.matcherHint(
-      this.isNot ? `.not.${matcher}` : `.${matcher}`,
-      "WS",
-      "expected"
-    ) +
-    "\n\n" +
+    this.utils.matcherHint(this.isNot ? `.not.${matcher}` : `.${matcher}`, 'WS', 'expected') +
+    '\n\n' +
     `Expected the websocket object to be a valid WS mock.\n` +
     `Received: ${typeof ws}\n` +
     `  ${this.utils.printReceived(ws)}`
@@ -42,16 +43,12 @@ const makeInvalidWsMessage = function makeInvalidWsMessage(
 };
 
 expect.extend({
-  async toReceiveMessage(
-    ws: WS,
-    expected: DeserializedMessage,
-    options?: ReceiveMessageOptions
-  ) {
+  async toReceiveMessage(ws: WS, expected: DeserializedMessage, options?: ReceiveMessageOptions) {
     const isWS = ws instanceof WS;
     if (!isWS) {
       return {
         pass: this.isNot, // always fail
-        message: makeInvalidWsMessage.bind(this, ws, "toReceiveMessage"),
+        message: makeInvalidWsMessage.bind(this, ws, 'toReceiveMessage'),
       };
     }
 
@@ -66,12 +63,8 @@ expect.extend({
       return {
         pass: this.isNot, // always fail
         message: () =>
-          this.utils.matcherHint(
-            this.isNot ? ".not.toReceiveMessage" : ".toReceiveMessage",
-            "WS",
-            "expected"
-          ) +
-          "\n\n" +
+          this.utils.matcherHint(this.isNot ? '.not.toReceiveMessage' : '.toReceiveMessage', 'WS', 'expected') +
+          '\n\n' +
           `Expected the websocket server to receive a message,\n` +
           `but it didn't receive anything in ${waitDelay}ms.`,
       };
@@ -82,8 +75,8 @@ expect.extend({
 
     const message = pass
       ? () =>
-          this.utils.matcherHint(".not.toReceiveMessage", "WS", "expected") +
-          "\n\n" +
+          this.utils.matcherHint('.not.toReceiveMessage', 'WS', 'expected') +
+          '\n\n' +
           `Expected the next received message to not equal:\n` +
           `  ${this.utils.printExpected(expected)}\n` +
           `Received:\n` +
@@ -91,8 +84,8 @@ expect.extend({
       : () => {
           const diffString = diff(expected, received, { expand: this.expand });
           return (
-            this.utils.matcherHint(".toReceiveMessage", "WS", "expected") +
-            "\n\n" +
+            this.utils.matcherHint('.toReceiveMessage', 'WS', 'expected') +
+            '\n\n' +
             `Expected the next received message to equal:\n` +
             `  ${this.utils.printExpected(expected)}\n` +
             `Received:\n` +
@@ -105,7 +98,7 @@ expect.extend({
       actual: received,
       expected,
       message,
-      name: "toReceiveMessage",
+      name: 'toReceiveMessage',
       pass,
     };
   },
@@ -115,7 +108,7 @@ expect.extend({
     if (!isWS) {
       return {
         pass: this.isNot, // always fail
-        message: makeInvalidWsMessage.bind(this, ws, "toHaveReceivedMessages"),
+        message: makeInvalidWsMessage.bind(this, ws, 'toHaveReceivedMessages'),
       };
     }
 
@@ -126,24 +119,16 @@ expect.extend({
     const pass = this.isNot ? received.some(Boolean) : received.every(Boolean);
     const message = pass
       ? () =>
-          this.utils.matcherHint(
-            ".not.toHaveReceivedMessages",
-            "WS",
-            "expected"
-          ) +
-          "\n\n" +
+          this.utils.matcherHint('.not.toHaveReceivedMessages', 'WS', 'expected') +
+          '\n\n' +
           `Expected the WS server to not have received the following messages:\n` +
           `  ${this.utils.printExpected(messages)}\n` +
           `But it received:\n` +
           `  ${this.utils.printReceived(ws.messages)}`
       : () => {
           return (
-            this.utils.matcherHint(
-              ".toHaveReceivedMessages",
-              "WS",
-              "expected"
-            ) +
-            "\n\n" +
+            this.utils.matcherHint('.toHaveReceivedMessages', 'WS', 'expected') +
+            '\n\n' +
             `Expected the WS server to have received the following messages:\n` +
             `  ${this.utils.printExpected(messages)}\n` +
             `Received:\n` +
@@ -155,7 +140,7 @@ expect.extend({
       actual: ws.messages,
       expected: messages,
       message,
-      name: "toHaveReceivedMessages",
+      name: 'toHaveReceivedMessages',
       pass,
     };
   },

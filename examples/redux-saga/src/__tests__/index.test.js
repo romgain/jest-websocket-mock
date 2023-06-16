@@ -1,10 +1,14 @@
-import ReactDOM from "react-dom";
-import "..";
+/**
+ * @copyright Romain Bertrand 2018
+ */
 
-jest.mock("react-dom");
+import ReactDOM from 'react-dom';
+import '..';
 
-describe("The index", () => {
-  it("can be imported without errors", () => {
+jest.mock('react-dom');
+
+describe('The index', () => {
+  it('can be imported without errors', () => {
     expect(ReactDOM.render).toHaveBeenCalled();
   });
 });

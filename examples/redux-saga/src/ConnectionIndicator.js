@@ -1,17 +1,17 @@
-import React from "react";
-import { connect } from "react-redux";
+/**
+ * @copyright Romain Bertrand 2018
+ */
+
+import React from 'react';
+import { connect } from 'react-redux';
 
 const ConnectionIndicator = ({ connected }) => (
   <div
     className={
-      connected
-        ? "ConnectionIndicator ConnectionIndicator--connected"
-        : "ConnectionIndicator ConnectionIndicator--disconnected"
+      connected ? 'ConnectionIndicator ConnectionIndicator--connected' : 'ConnectionIndicator ConnectionIndicator--disconnected'
     }
-    title={connected ? "connected" : "disconnected"}
+    title={connected ? 'connected' : 'disconnected'}
   />
 );
 
-export default connect((state) => ({ connected: state.connected }))(
-  ConnectionIndicator
-);
+export default connect((state) => ({ connected: state.connected }))(ConnectionIndicator);

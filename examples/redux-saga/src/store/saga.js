@@ -1,17 +1,21 @@
-import { eventChannel, END } from "redux-saga";
-import { cancel, call, delay, fork, put, take } from "redux-saga/effects";
-import { actions } from "./reducer";
+/**
+ * @copyright Romain Bertrand 2018
+ */
+
+import { eventChannel, END } from 'redux-saga';
+import { cancel, call, delay, fork, put, take } from 'redux-saga/effects';
+import { actions } from './reducer';
 
 const RECONNECT_TIMEOUT = 6000;
 
 function websocketInitChannel(connection) {
-  return eventChannel(emitter => {
+  return eventChannel((emitter) => {
     const closeCallback = () => {
       emitter(actions.connectionLost());
       return emitter(END);
     };
 
-    connection.onmessage = e => {
+    connection.onmessage = (e) => {
       return emitter(actions.storeReceivedMessage(e.data));
     };
 

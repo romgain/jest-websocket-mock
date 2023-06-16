@@ -7,8 +7,7 @@ node_modules
 coverage
 
 # production
-build
-lib
+dist
 jest-websocket-mock-*.tgz
 
 # misc

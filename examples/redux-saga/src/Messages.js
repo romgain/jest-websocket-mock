@@ -1,5 +1,9 @@
-import React from "react";
-import { connect } from "react-redux";
+/**
+ * @copyright Romain Bertrand 2018
+ */
+
+import React from 'react';
+import { connect } from 'react-redux';
 
 const Message = ({ text, side }) => <div>{`(${side}) ${text}`}</div>;
 
