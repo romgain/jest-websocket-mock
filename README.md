@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/vitest-websocket-mock.svg)](https://badge.fury.io/js/vitest-websocket-mock)
 [![Build Status](https://github.com/akiomik/vitest-websocket-mock/actions/workflows/ci.yml/badge.svg)](https://github.com/akiomik/vitest-websocket-mock/actions)
-[![Coverage report](https://codecov.io/gh/akiomik/vitest-websocket-mock/branch/main/graph/badge.svg)](https://codecov.io/gh/akiomik/vitest-websocket-mock)
+[![codecov](https://codecov.io/gh/akiomik/vitest-websocket-mock/branch/main/graph/badge.svg?token=40OVYIT90L)](https://codecov.io/gh/akiomik/vitest-websocket-mock)
 
 A set of utilities and Vitest matchers to help testing complex websocket interactions.
 A patched fork of [romgain/jest-websocket-mock](https://github.com/romgain/jest-websocket-mock).
