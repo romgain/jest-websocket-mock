@@ -23,6 +23,8 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm test
+        env:
+          FORCE_COLOR: 1
       - run: npm run lint
       - run: npm run build
       - run: npm pack
