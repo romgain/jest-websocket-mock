@@ -5,6 +5,7 @@
 
 import '../matchers';
 
+import chalk from 'chalk';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import WS from '../websocket';
@@ -44,8 +45,7 @@ describe('.toReceiveMessage', () => {
 
   it('fails when called with an expected argument that is not a valid WS', async () => {
     expect.hasAssertions();
-    await expect(expect('boom').toReceiveMessage('hello there')).rejects
-      .toThrowErrorMatchingInlineSnapshot(`
+    await expect(expect('boom').toReceiveMessage('hello there')).rejects.toThrowErrorMatchingInlineSnapshot(`
 "[2mexpect([22m[31mWS[39m[2m).toReceiveMessage([22m[32mexpected[39m[2m)[22m
 
 Expected the websocket object to be a valid WS mock.
@@ -56,8 +56,7 @@ Received: string
 
   it('fails when the WS server does not receive the expected message', async () => {
     expect.hasAssertions();
-    await expect(expect(server).toReceiveMessage('hello there')).rejects
-      .toThrowErrorMatchingInlineSnapshot(`
+    await expect(expect(server).toReceiveMessage('hello there')).rejects.toThrowErrorMatchingInlineSnapshot(`
 "[2mexpect([22m[31mWS[39m[2m).toReceiveMessage([22m[32mexpected[39m[2m)[22m
 
 Expected the websocket server to receive a message,
@@ -67,8 +66,7 @@ but it didn't receive anything in 1000ms."
 
   it('fails when the WS server does not receive the expected message with custom timeout', async () => {
     expect.hasAssertions();
-    await expect(expect(server).toReceiveMessage('hello there', { timeout: 3000 })).rejects
-      .toThrowErrorMatchingInlineSnapshot(`
+    await expect(expect(server).toReceiveMessage('hello there', { timeout: 3000 })).rejects.toThrowErrorMatchingInlineSnapshot(`
 "[2mexpect([22m[31mWS[39m[2m).toReceiveMessage([22m[32mexpected[39m[2m)[22m
 
 Expected the websocket server to receive a message,
@@ -79,8 +77,7 @@ but it didn't receive anything in 3000ms."
   it('fails when the WS server receives a different message', async () => {
     expect.hasAssertions();
     client.send('hello there');
-    await expect(expect(server).toReceiveMessage('HI!')).rejects
-      .toThrowErrorMatchingInlineSnapshot(`
+    await expect(expect(server).toReceiveMessage('HI!')).rejects.toThrowErrorMatchingInlineSnapshot(`
 "[2mexpect([22m[31mWS[39m[2m).toReceiveMessage([22m[32mexpected[39m[2m)[22m
 
 Expected the next received message to equal:
@@ -90,11 +87,11 @@ Received:
 
 Difference:
 
-[32m- Expected[39m
-[31m+ Received[39m
+${chalk.green('- Expected')}
+${chalk.red('+ Received')}
 
-[32m- HI![39m
-[31m+ hello there[39m"
+${chalk.green('- HI!')}
+${chalk.red('+ hello there')}"
 `);
   });
 
@@ -102,8 +99,7 @@ Difference:
   it('fails when expecting a JSON message but the server is not configured for JSON protocols', async () => {
     expect.hasAssertions();
     client.send(`{"answer":42}`);
-    await expect(expect(server).toReceiveMessage({ answer: 42 })).rejects
-      .toThrowErrorMatchingInlineSnapshot(`
+    await expect(expect(server).toReceiveMessage({ answer: 42 })).rejects.toThrowErrorMatchingInlineSnapshot(`
 "[2mexpect([22m[31mWS[39m[2m).toReceiveMessage([22m[32mexpected[39m[2m)[22m
 
 Expected the next received message to equal:
@@ -115,7 +111,7 @@ Received:
 
 Difference:
 
-  Comparing two different types of values. Expected [32mobject[39m but received [31mstring[39m."
+  Comparing two different types of values. Expected ${chalk.green('object')} but received ${chalk.red('string')}."
 `);
   });
 });
@@ -128,8 +124,7 @@ describe('.not.toReceiveMessage', () => {
 
   it('fails when called with an expected argument that is not a valid WS', async () => {
     expect.hasAssertions();
-    await expect(expect('boom').not.toReceiveMessage('hello there')).rejects
-      .toThrowErrorMatchingInlineSnapshot(`
+    await expect(expect('boom').not.toReceiveMessage('hello there')).rejects.toThrowErrorMatchingInlineSnapshot(`
 "[2mexpect([22m[31mWS[39m[2m).not.toReceiveMessage([22m[32mexpected[39m[2m)[22m
 
 Expected the websocket object to be a valid WS mock.
@@ -140,8 +135,7 @@ Received: string
 
   it("fails when the WS server doesn't receive any messages", async () => {
     expect.hasAssertions();
-    await expect(expect(server).not.toReceiveMessage('hello there')).rejects
-      .toThrowErrorMatchingInlineSnapshot(`
+    await expect(expect(server).not.toReceiveMessage('hello there')).rejects.toThrowErrorMatchingInlineSnapshot(`
 "[2mexpect([22m[31mWS[39m[2m).not.toReceiveMessage([22m[32mexpected[39m[2m)[22m
 
 Expected the websocket server to receive a message,
@@ -152,8 +146,7 @@ but it didn't receive anything in 1000ms."
   it('fails when the WS server receives the un-expected message', async () => {
     expect.hasAssertions();
     client.send('hello there');
-    await expect(expect(server).not.toReceiveMessage('hello there')).rejects
-      .toThrowErrorMatchingInlineSnapshot(`
+    await expect(expect(server).not.toReceiveMessage('hello there')).rejects.toThrowErrorMatchingInlineSnapshot(`
 "[2mexpect([22m[31mWS[39m[2m).not.toReceiveMessage([22m[32mexpected[39m[2m)[22m
 
 Expected the next received message to not equal:
