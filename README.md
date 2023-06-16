@@ -5,10 +5,13 @@
 [![Coverage report](https://codecov.io/gh/akiomik/vitest-websocket-mock/branch/main/graph/badge.svg)](https://codecov.io/gh/akiomik/vitest-websocket-mock)
 
 A set of utilities and Vitest matchers to help testing complex websocket interactions.
+A patched fork of [romgain/jest-websocket-mock](https://github.com/romgain/jest-websocket-mock).
 
 **Examples:**
-Several examples are provided in the [examples folder](https://github.com/akiomik/vitest-websocket-mock/blob/main/examples/).
-In particular:
+~~Several examples are provided in the [examples folder](https://github.com/akiomik/vitest-websocket-mock/blob/main/examples/).
+In particular:~~
+
+NOTE: These examples are currently not working :cry:
 
 - [testing a redux saga that manages a websocket connection](https://github.com/akiomik/vitest-websocket-mock/blob/main/examples/redux-saga/src/__tests__/saga.test.js)
 - [testing a component using the saga above](https://github.com/akiomik/vitest-websocket-mock/blob/main/examples/redux-saga/src/__tests__/App.test.js)
@@ -340,6 +343,8 @@ restrict yourself to the browser APIs!
 
 ## Examples
 
-For a real life example, see the
+~~For a real life example, see the
 [examples directory](https://github.com/akiomik/vitest-websocket-mock/tree/main/examples),
-and in particular the saga tests.
+and in particular the saga tests.~~
+
+NOTE: These examples are currently not working :cry:
