@@ -8,17 +8,17 @@
     "url": "git+https://github.com/akiomik/vitest-websocket-mock.git"
   },
   "types": "dist/index.d.ts",
-  "module": "dist/index.es.js",
+  "module": "dist/index.js",
   "exports": {
     ".": {
-      "import": "./dist/index.es.js",
+      "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
   },
   "scripts": {
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
-    "build": "vite build && tsc -p tsconfig.build.json",
+    "build": "tsup",
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
     "prepublishOnly": "npm run build",
