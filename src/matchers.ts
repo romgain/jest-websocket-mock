@@ -57,10 +57,14 @@ expect.extend({
 
     const waitDelay = options?.timeout ?? WAIT_DELAY;
 
+    let timeoutId;
     const messageOrTimeout = await Promise.race([
       ws.nextMessage,
-      new Promise((resolve) => setTimeout(() => resolve(TIMEOUT), waitDelay)),
+      new Promise((resolve) => {
+        timeoutId = setTimeout(() => resolve(TIMEOUT), waitDelay);
+      }),
     ]);
+    clearTimeout(timeoutId);
 
     if (messageOrTimeout === TIMEOUT) {
       return {
