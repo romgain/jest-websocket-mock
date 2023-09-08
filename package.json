@@ -61,6 +61,6 @@
   },
   "dependencies": {
     "jest-diff": "^29.2.0",
-    "mock-socket": "^9.1.0"
+    "mock-socket": "^9.3.0"
   }
 }
