@@ -115,7 +115,7 @@ describe("The WS helper", () => {
 
     server.send({ type: "CHITCHAT", payload: "Nice weather today" });
     expect(message).toEqual(
-      `{"type":"CHITCHAT","payload":"Nice weather today"}`
+      `{"type":"CHITCHAT","payload":"Nice weather today"}`,
     );
   });
 
@@ -130,7 +130,7 @@ describe("The WS helper", () => {
         const client = new WebSocket("ws://localhost:1234");
         client.onerror = errorCallback;
         client.onopen = resolve;
-      })
+      }),
       // WebSocket onerror event gets called with an event of type error and not an error
     ).rejects.toEqual(expect.objectContaining({ type: "error" }));
 
@@ -152,13 +152,13 @@ describe("The WS helper", () => {
         const client = new WebSocket("ws://localhost:1234", "foo");
         client.onerror = errorCallback;
         client.onopen = resolve;
-      })
+      }),
     ).rejects.toEqual(
       // WebSocket onerror event gets called with an event of type error and not an error
       expect.objectContaining({
         type: "error",
         currentTarget: expect.objectContaining({ protocol: "foo" }),
-      })
+      }),
     );
 
     // ensure that the WebSocket mock set up by mock-socket is still present
@@ -184,7 +184,7 @@ describe("The WS helper", () => {
         reason: "",
         type: "close",
         wasClean: true,
-      })
+      }),
     );
 
     // ensure that the WebSocket mock set up by mock-socket is still present
@@ -208,7 +208,7 @@ describe("The WS helper", () => {
         reason: "boom",
         type: "close",
         wasClean: false,
-      })
+      }),
     );
   });
 
@@ -318,7 +318,7 @@ describe("The WS helper", () => {
         reason: "boom",
         type: "close",
         wasClean: false,
-      })
+      }),
     );
   });
 });
