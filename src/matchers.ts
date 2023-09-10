@@ -50,7 +50,7 @@ expect.extend({
     const isWS = ws instanceof WS;
     if (!isWS) {
       return {
-        pass: this.isNot, // always fail
+        pass: !!this.isNot, // always fail
         message: makeInvalidWsMessage.bind(this, ws, "toReceiveMessage"),
       };
     }
@@ -68,7 +68,7 @@ expect.extend({
 
     if (messageOrTimeout === TIMEOUT) {
       return {
-        pass: this.isNot, // always fail
+        pass: !!this.isNot, // always fail
         message: () =>
           this.utils.matcherHint(
             this.isNot ? ".not.toReceiveMessage" : ".toReceiveMessage",
@@ -118,7 +118,7 @@ expect.extend({
     const isWS = ws instanceof WS;
     if (!isWS) {
       return {
-        pass: this.isNot, // always fail
+        pass: !!this.isNot, // always fail
         message: makeInvalidWsMessage.bind(this, ws, "toHaveReceivedMessages"),
       };
     }
