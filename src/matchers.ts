@@ -11,10 +11,10 @@ declare global {
     interface Matchers<R, T> {
       toReceiveMessage<TMessage = object>(
         message: DeserializedMessage<TMessage>,
-        options?: ReceiveMessageOptions
+        options?: ReceiveMessageOptions,
       ): Promise<R>;
       toHaveReceivedMessages<TMessage = object>(
-        messages: Array<DeserializedMessage<TMessage>>
+        messages: Array<DeserializedMessage<TMessage>>,
       ): R;
     }
   }
@@ -26,13 +26,13 @@ const TIMEOUT = Symbol("timoeut");
 const makeInvalidWsMessage = function makeInvalidWsMessage(
   this: jest.MatcherUtils,
   ws: WS,
-  matcher: string
+  matcher: string,
 ) {
   return (
     this.utils.matcherHint(
       this.isNot ? `.not.${matcher}` : `.${matcher}`,
       "WS",
-      "expected"
+      "expected",
     ) +
     "\n\n" +
     `Expected the websocket object to be a valid WS mock.\n` +
@@ -45,7 +45,7 @@ expect.extend({
   async toReceiveMessage(
     ws: WS,
     expected: DeserializedMessage,
-    options?: ReceiveMessageOptions
+    options?: ReceiveMessageOptions,
   ) {
     const isWS = ws instanceof WS;
     if (!isWS) {
@@ -73,7 +73,7 @@ expect.extend({
           this.utils.matcherHint(
             this.isNot ? ".not.toReceiveMessage" : ".toReceiveMessage",
             "WS",
-            "expected"
+            "expected",
           ) +
           "\n\n" +
           `Expected the websocket server to receive a message,\n` +
@@ -125,7 +125,7 @@ expect.extend({
 
     const received = messages.map((expected) =>
       // object comparison to handle JSON protocols
-      ws.messages.some((actual) => this.equals(actual, expected))
+      ws.messages.some((actual) => this.equals(actual, expected)),
     );
     const pass = this.isNot ? received.some(Boolean) : received.every(Boolean);
     const message = pass
@@ -133,7 +133,7 @@ expect.extend({
           this.utils.matcherHint(
             ".not.toHaveReceivedMessages",
             "WS",
-            "expected"
+            "expected",
           ) +
           "\n\n" +
           `Expected the WS server to not have received the following messages:\n` +
@@ -145,7 +145,7 @@ expect.extend({
             this.utils.matcherHint(
               ".toHaveReceivedMessages",
               "WS",
-              "expected"
+              "expected",
             ) +
             "\n\n" +
             `Expected the WS server to have received the following messages:\n` +

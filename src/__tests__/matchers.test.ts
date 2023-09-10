@@ -60,7 +60,7 @@ describe(".toReceiveMessage", () => {
   it("fails when the WS server does not receive the expected message with custom timeout", async () => {
     expect.hasAssertions();
     await expect(
-      expect(server).toReceiveMessage("hello there", { timeout: 3000 })
+      expect(server).toReceiveMessage("hello there", { timeout: 3000 }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(`
       "[2mexpect([22m[31mWS[39m[2m).toReceiveMessage([22m[32mexpected[39m[2m)[22m
 

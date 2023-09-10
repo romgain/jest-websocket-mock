@@ -2,7 +2,7 @@ export default class Queue<ItemT> {
   pendingItems: Array<ItemT> = [];
   nextItemResolver!: () => void;
   nextItem: Promise<void> = new Promise(
-    (done) => (this.nextItemResolver = done)
+    (done) => (this.nextItemResolver = done),
   );
 
   put(item: ItemT): void {
@@ -19,7 +19,7 @@ export default class Queue<ItemT> {
     }
     let resolver: (item: ItemT) => void;
     const nextItemPromise: Promise<ItemT> = new Promise(
-      (done) => (resolver = done)
+      (done) => (resolver = done),
     );
     this.nextItem.then(() => {
       resolver(this.pendingItems.shift() as ItemT);
