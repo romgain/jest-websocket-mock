@@ -33,10 +33,11 @@ can send messages to connected clients.
 import WS from "jest-websocket-mock";
 
 // create a WS instance, listening on port 1234 on localhost
-const server = new WS("ws://localhost:1234");
+const serverURI = "ws://localhost:1234";
+const server = new WS(serverURI);
 
 // real clients can connect
-const client = new WebSocket("ws://localhost:1234");
+const client = new WebSocket(serverURI);
 await server.connected; // wait for the server to have established the connection
 
 // the mock websocket server will record all the messages it receives
