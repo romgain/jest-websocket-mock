@@ -24,7 +24,7 @@ export default class WS {
 
   static instances: Array<WS> = [];
   messages: Array<DeserializedMessage> = [];
-  messagesToConsume = new Queue();
+  messagesToConsume = new Queue<DeserializedMessage>();
 
   private _isConnected: Promise<Client>;
   private _isClosed: Promise<{}>;
