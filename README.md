@@ -96,7 +96,10 @@ A `WS` instance has the following attributes:
 `jest-websocket-mock` registers custom jest matchers to make assertions
 on received messages easier:
 
-- `.toReceiveMessage`: async matcher that waits for the next message received
+- `.toReceiveMessage`: async matcher that waits 1000ms for the the mock websocket
+  server to receive the expected message. It will time out with a helpful
+  message after 1000ms.
+- `.toReceiveMessageNext`: async matcher that waits for the next message received
   by the the mock websocket server, and asserts its content. It will time out
   with a helpful message after 1000ms.
 - `.toHaveReceivedMessages`: synchronous matcher that checks that all the

@@ -13,6 +13,10 @@ declare global {
         message: DeserializedMessage<TMessage>,
         options?: ReceiveMessageOptions,
       ): Promise<R>;
+      toReceiveMessageNext<TMessage = object>(
+        message: DeserializedMessage<TMessage>,
+        options?: ReceiveMessageOptions,
+      ): Promise<R>;
       toHaveReceivedMessages<TMessage = object>(
         messages: Array<DeserializedMessage<TMessage>>,
       ): R;
@@ -56,6 +60,84 @@ expect.extend({
     }
 
     const waitDelay = options?.timeout ?? WAIT_DELAY;
+    let receivedMessages: DeserializedMessage[] = [];
+
+    let timeoutId;
+    const messageOrTimeout = await Promise.race<any>([
+      new Promise(async (resolve) => {
+        let message;
+
+        while (1) {
+          const received = await ws.nextMessage;
+
+          receivedMessages.push(received);
+
+          const pass = this.equals(received, expected);
+
+          if (pass) {
+            message = () =>
+              this.utils.matcherHint(".not.toReceiveMessage", "WS", "expected") +
+              "\n\n" +
+              `Did not expect to receive the following message:\n` +
+              `  ${this.utils.printExpected(expected)}\n` +
+              `but received it.`;
+            break;
+          }
+        }
+
+        resolve(message);
+      }),
+      new Promise((resolve) => {
+        timeoutId = setTimeout(() => resolve(TIMEOUT), waitDelay);
+      }),
+    ]);
+    clearTimeout(timeoutId);
+
+    if (messageOrTimeout === TIMEOUT) {
+      return {
+        actual: receivedMessages,
+        expected,
+        pass: false, // always fail
+        message: () => 
+          this.utils.matcherHint(
+            this.isNot ? ".not.toReceiveMessage" : ".toReceiveMessage",
+            "WS",
+            "expected",
+          ) +
+          "\n\n" +
+          `${this.isNot ? "Did not expect" : "Expected"} the following message within ${waitDelay}ms:\n` +
+          `  ${this.utils.printExpected(expected)}\n` +
+          ((receivedMessages.length > 0) ?
+          "but instead received the following messages:\n" +
+          `  ${this.utils.printReceived(receivedMessages)}\n\n` +
+            `Difference:\n\n${diff([expected], receivedMessages, { expand: this.expand })}` : `but it didn't receive anything.`)
+      };
+    }
+    const message = messageOrTimeout;
+
+    return {
+      actual: receivedMessages,
+      expected,
+      message: message,
+      name: "toReceiveMessage",
+      pass: true,
+    };
+  },
+
+  async toReceiveMessageNext(
+    ws: WS,
+    expected: DeserializedMessage,
+    options?: ReceiveMessageOptions,
+  ) {
+    const isWS = ws instanceof WS;
+    if (!isWS) {
+      return {
+        pass: !!this.isNot, // always fail
+        message: makeInvalidWsMessage.bind(this, ws, "toReceiveMessageNext"),
+      };
+    }
+
+    const waitDelay = options?.timeout ?? WAIT_DELAY;
 
     let timeoutId;
     const messageOrTimeout = await Promise.race([
@@ -71,7 +153,7 @@ expect.extend({
         pass: !!this.isNot, // always fail
         message: () =>
           this.utils.matcherHint(
-            this.isNot ? ".not.toReceiveMessage" : ".toReceiveMessage",
+            this.isNot ? ".not.toReceiveMessageNext" : ".toReceiveMessageNext",
             "WS",
             "expected",
           ) +
@@ -86,7 +168,7 @@ expect.extend({
 
     const message = pass
       ? () =>
-          this.utils.matcherHint(".not.toReceiveMessage", "WS", "expected") +
+          this.utils.matcherHint(".not.toReceiveMessageNext", "WS", "expected") +
           "\n\n" +
           `Expected the next received message to not equal:\n` +
           `  ${this.utils.printExpected(expected)}\n` +
@@ -95,7 +177,7 @@ expect.extend({
       : () => {
           const diffString = diff(expected, received, { expand: this.expand });
           return (
-            this.utils.matcherHint(".toReceiveMessage", "WS", "expected") +
+            this.utils.matcherHint(".toReceiveMessageNext", "WS", "expected") +
             "\n\n" +
             `Expected the next received message to equal:\n` +
             `  ${this.utils.printExpected(expected)}\n` +
@@ -109,7 +191,7 @@ expect.extend({
       actual: received,
       expected,
       message,
-      name: "toReceiveMessage",
+      name: "toReceiveMessageNext",
       pass,
     };
   },
